@@ -8,6 +8,7 @@ class Categoria(models.Model):
     
     class Meta:
         verbose_name_plural = "Categorias"
+        ordering = ['-nome']
     
 class Metodo(models.Model):
     nome = models.CharField("Método", max_length=20)
@@ -17,12 +18,18 @@ class Metodo(models.Model):
     
     class Meta:
         verbose_name_plural = "Métodos"
+        ordering = ['-nome']
     
 TIPOS = [
         ('VEGETARIANO', 'Vegetariano'),
         ('VEGANO', 'Vegano'),
         ('NENHUM', 'Nenhum'),
     ]
+
+ESTADOS = [
+        ('PUBLICO', 'Público')
+        ('PRIVADO', 'Privado')
+]
 
 class Receita(models.Model):
     nome = models.CharField("Nome", max_length=200)
