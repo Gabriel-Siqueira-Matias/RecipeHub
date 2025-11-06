@@ -48,7 +48,9 @@ UNIDADES = [
         ('COLHER_SOPA', 'Colheres de sopa'),
         ('UNIDADE', 'unidades'),
         ('COLHER_CHA', 'Colheres de chá'),
-        ('GRAMA', 'Gramas')
+        ('GRAMA', 'Gramas'),
+        ('CAIXA', 'Caixas'),
+        ('OPCIONAL', 'A gosto'),
     ]
 
 class Ingrediente(models.Model):
