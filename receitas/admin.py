@@ -56,7 +56,7 @@ class MidiaInline(admin.TabularInline):
     preview.short_description = "Pré-visualização"
 
 class ReceitaAdmin(admin.ModelAdmin):
-    list_display = ("nome","autor", "mostrar_categorias", "mostrar_metodos", "tipo", "porcoes", "tempo_preparo", "criado_em")
+    list_display = ("nome", "autor", "mostrar_categorias", "mostrar_metodos", "tipo", "porcoes", "tempo_preparo", "criado_em")
     search_fields = ("nome",)
     list_filter = ("tipo", "categorias", "metodos", "estado")
     filter_horizontal = ("categorias", "metodos")

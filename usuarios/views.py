@@ -12,8 +12,7 @@ def cadastro(request):
         form = Formulario_Cadastro(request.POST)
         if form.is_valid():
             user = form.save()
-            # Cria automaticamente o Perfil associado
-            Perfil.objects.create(usuario=user, tipo='USUARIO')  # ou outro campo que você usa
+            Perfil.objects.create(usuario=user, tipo='USUARIO')
             login(request, user)
             messages.success(request, "Conta criada com sucesso!")
             return redirect('home')
