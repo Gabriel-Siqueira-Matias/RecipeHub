@@ -14,7 +14,6 @@ def cadastro(request):
             user = form.save()
             Perfil.objects.create(usuario=user, tipo='USUARIO')
             login(request, user)
-            messages.success(request, "Conta criada com sucesso!")
             return redirect('home')
     else:
         form = Formulario_Cadastro()
@@ -35,7 +34,6 @@ def logout_view(request):
 def perfil(request):
     perfil = get_object_or_404(Perfil, user=request.user)
     receitas = Receita.objects.filter(autor=perfil)
-
     context = {
         'perfil': perfil,
         'receitas': receitas,
