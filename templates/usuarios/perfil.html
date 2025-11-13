@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Perfil - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="perfil-container">
+  <h2>Perfil de {{ user.username }}</h2>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><strong>Tipo:</strong> {{ perfil.tipo }}</p>
+
+  <hr>
+
+  <h3>Minhas Receitas</h3>
+  {% if receitas %}
+    <ul>
+      {% for receita in receitas %}
+        <li>
+          <a href="{% url 'receitas:detalhe_receita' receita.id%}">{{ receita.nome }}</a> — {{ receita.get_estado_display }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Você ainda não criou nenhuma receita.</p>
+  {% endif %}
+</div>
+{% endblock %}

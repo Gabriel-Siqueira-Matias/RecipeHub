@@ -1,4 +1,5 @@
 from django.db import models
+from usuarios.models import Perfil
 
 class Categoria(models.Model):
     nome = models.CharField("Categoria", max_length=20)
@@ -8,7 +9,7 @@ class Categoria(models.Model):
     
     class Meta:
         verbose_name_plural = "Categorias"
-        ordering = ['-nome']
+        ordering = ['nome']
     
 class Metodo(models.Model):
     nome = models.CharField("Método", max_length=20)
@@ -18,27 +19,28 @@ class Metodo(models.Model):
     
     class Meta:
         verbose_name_plural = "Métodos"
-        ordering = ['-nome']
-    
-TIPOS = [
+        ordering = ['nome']
+
+class Receita(models.Model):
+    TIPOS = [
         ('VEGETARIANO', 'Vegetariano'),
         ('VEGANO', 'Vegano'),
         ('NENHUM', 'Nenhum'),
     ]
+    ESTADOS = [
+        ('PUBLICO', 'Público'),
+        ('PRIVADO', 'Privado'),
+    ]
 
-ESTADOS = [
-        ('PUBLICO', 'Público')
-        ('PRIVADO', 'Privado')
-]
-
-class Receita(models.Model):
     nome = models.CharField("Nome", max_length=200)
     categorias = models.ManyToManyField(Categoria, verbose_name="Categorias")
     metodos = models.ManyToManyField(Metodo, verbose_name="Metodos")
-    tipo = models.CharField("Tipo", max_length=15, choices=TIPOS)
+    tipo = models.CharField("Tipo", max_length=15, default="NENHUM", choices=TIPOS)
     porcoes = models.PositiveIntegerField("Porções")
     tempo_preparo = models.PositiveIntegerField("Tempo de preparo (minutos)", help_text="Informe o tempo total necessário em minutos")
     preparo = models.TextField("Preparo")
+    estado = models.CharField("Estado", max_length=10, default="PRIVADO", choices=ESTADOS)
+    autor = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name="receitas", verbose_name="Autor")
     criado_em = models.DateTimeField("Criado em", auto_now_add=True)
     atualizado_em = models.DateTimeField("Atualizado em", auto_now=True)
 
@@ -49,18 +51,18 @@ class Receita(models.Model):
         verbose_name_plural = "Receitas"
         ordering = ['-criado_em']
 
-UNIDADES = [
-        ('ML', 'mls'),
-        ('XICARA', 'Xicaras'),
-        ('COLHER_SOPA', 'Colheres de sopa'),
-        ('UNIDADE', 'unidades'),
-        ('COLHER_CHA', 'Colheres de chá'),
-        ('GRAMA', 'Gramas'),
-        ('CAIXA', 'Caixas'),
+class Ingrediente(models.Model):
+    UNIDADES = [
+        ('CAIXA', 'Caixa(s)'),
+        ('COLHER_CHA', 'Colher(es) de chá'),
+        ('COLHER_SOPA', 'Colher(es) de sopa'),
+        ('GRAMA', 'Grama(s) / g(s)'),
+        ('ML', 'Mililitro(s) / mL(s)'),
         ('OPCIONAL', 'A gosto'),
+        ('UNIDADE', 'unidade(s)'),
+        ('XICARA', 'Xicara(s)'),
     ]
 
-class Ingrediente(models.Model):
     receita = models.ForeignKey(Receita, on_delete=models.CASCADE, related_name="ingredientes")
     nome = models.CharField("Nome", max_length=100)
     quantidade = models.PositiveIntegerField("Quantidade")
@@ -71,3 +73,19 @@ class Ingrediente(models.Model):
     
     class Meta:
         verbose_name_plural = "Ingredientes"
+
+class Midia(models.Model):
+    TIPOS_MIDIA = [
+        ('IMAGEM', 'Imagem'),
+        ('VIDEO', 'Video'),
+    ]
+
+    receita = models.ForeignKey(Receita, on_delete=models.CASCADE, related_name="midias")
+    tipo = models.CharField("Tipo", max_length=10, choices=TIPOS_MIDIA)
+    arquivo = models.FileField("Arquivo", upload_to="receitas/")
+
+    def __str__(self):
+        return f"{self.get_tipo_display()} de {self.receita.nome}"
+    
+    class Meta:
+        verbose_name_plural = "Mídias"

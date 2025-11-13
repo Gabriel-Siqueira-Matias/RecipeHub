@@ -1,8 +1,9 @@
 from django.apps import AppConfig
 
-class ReceitasConfig(AppConfig):
+
+class UsuariosConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'receitas'
+    name = 'usuarios'
 
     def ready(self):
-        import receitas.signals
+        import usuarios.signals

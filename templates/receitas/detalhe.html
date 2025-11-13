@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ receita.nome }}{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/receitas/detalhe.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div id="sub_main">
+    <div id="nome">
+        <h2>{{ receita.nome }}</h2>
+    </div>
+    <div id="midias">
+        <button id="anterior"><=</button>
+        <div id="midia-container">
+        {% for midia in receita.midias.all %}
+            <div class="midia_elemento {% if forloop.first %}active{% endif %}">
+                {% if midia.tipo == 'IMAGEM' %}
+                    <img src="{{ midia.arquivo.url }}" alt="Imagem de {{receita.nome}}">
+                    {% elif midia.tipo == 'VIDEO' %}
+                        <video controls>
+                            <source src="{{ midia.arquivo.url}}">
+                        </video>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <button id="proximo">=></button>
+    </div>
+    <div id="informacoes">
+        <div class="informacao">
+            <div class="campo">
+                Categorias
+            </div>
+            <div class="elementos">
+                {% for categoria in receita.categorias.all %}
+                    <p class="elemento">&bull; {{ categoria.nome }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="informacao">
+            <div class="campo">
+                Tipo
+            </div>
+            <div class="elementos">
+                <p class="elemento">&bull; {{ receita.get_tipo_display }}</p>
+            </div>
+        </div>
+        <div class="informacao">
+            <div class="campo">
+                Duração
+            </div>
+            <div class="elementos">
+                <p class="elemento">&bull; {{ receita.tempo_preparo }} minuto(s)</p>
+            </div>
+        </div>
+        <div class="informacao">
+            <div class="campo">
+                Metodos
+            </div>
+            <div class="elementos">
+                {% for metodo in receita.metodos.all %}
+                    <p class="elemento">&bull; {{ metodo.nome }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="informacao">
+            <div class="campo">
+                Porções
+            </div>
+            <div class="elementos">
+                <p class="elemento">&bull; {{ receita.porcoes }} porçõe(s)
+            </div>
+        </div>
+    </div>
+    <div id="como_fazer">
+        <ul><span>Ingredientes</span>
+            {% for ingrediente in receita.ingredientes.all %}
+                <li>{{ingrediente.quantidade}} {{ingrediente.get_unidade_display}} de {{ ingrediente.nome }}
+            {% endfor %}
+        </ul>
+        <ul><span>Como Fazer:</span>
+            <li>{{ receita.preparo }}
+        </ul>
+    </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+    <script src="{% static 'js/receitas/detalhe.js' %}"></script>
+{% endblock %}

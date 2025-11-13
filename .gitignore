@@ -1,7 +1,13 @@
-echo "venv/
+# Ambientes virtuais e cache
+venv/
 __pycache__/
-db.sqlite3
 *.pyc
+*.pyo
 *.log
 .DS_Store
-" > .gitignore
+db.sqlite3
+media/
+.env
+*.code-workspace
+.vscode/
+.idea/

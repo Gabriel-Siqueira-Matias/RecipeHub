@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %} RecipeHub {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    {% block extra_css %}{% endblock %}
+  </head>
+
+  <body>
+    <header>
+      {% block header %}
+      <div id="sub_header">
+        <a href="{% url 'home' %}">
+          <div id="bloco_logo">
+              <img src="{% static 'img/base/pixel+cookie.gif' %}" alt="Cookie sendo comido" id="logo">
+              <h1>RecipeHub</h1>
+          </div>
+        </a>
+        <div id="bloco_pesquisa">
+          <input type="text">
+          <button>Filtros</button>
+          <button>Pesquisar</button>
+        </div>
+        <div id="bloco_conta">
+          {% if user.is_authenticated %}
+            <a href="{% url 'usuarios:perfil' %}">Olá, {{ user.username }}!</a>
+            <form action="{% url 'usuarios:logout' %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit">Sair</button>
+            </form>
+          {% else %}
+            <a href="{% url 'usuarios:cadastro' %}"><button>Cadastro</button></a>
+            <a href="{% url 'usuarios:login' %}"><button>Login</button></a>
+          {% endif %}
+        </div>
+      </div>
+      {% endblock %}
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+      {% block footer %}
+      <p>RecipeHub</p>
+      <p>2025</p>
+      {% endblock %}
+    </footer>
+    {% block extra_scripts %}{% endblock %}
+  </body>
+</html>

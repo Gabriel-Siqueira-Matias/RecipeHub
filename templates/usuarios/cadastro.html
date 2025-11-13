@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cadastro{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/usuarios/cadastro.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div id="sub_main">
+    <h2>Sistema de cadastro</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div id="bloco">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" id="botao_cadastro">Enviar</button>
+    </form>
+    <p>
+        Já possui uma conta? <a href="{% url 'usuarios:login' %}">Entrar</a>
+    </p>
+</div>
+{% endblock %}

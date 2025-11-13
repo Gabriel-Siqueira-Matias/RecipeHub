@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/receitas/lista.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div id="sub_main">
+    <div class="bloco">
+        <div class="sobre">
+            <h2>Todas as receitas</h2>
+        </div>
+        <div class="itens">
+            {% for receita in receitas %}
+                <a href="{% url 'receitas:detalhe_receita' receita.id%}">
+                    <div class="item">
+                        <div class="imagem_receita">
+                            {% with midia=receita.midias.first %}
+                                <img src="{{ midia.arquivo.url }}" alt="Imagem de {{receita.nome}}">
+                            {% endwith %}
+                        </div>
+                        <div class="informacao_receita">
+                            <strong>{{ receita.nome }}</strong>
+                            <ul>
+                                <li class="lista_categoria">Categorias:
+                                    {% for categoria in receita.categorias.all %}
+                                        <span class="item_categoria">{{ categoria.nome }}</span>
+                                        {% if not forloop.last %}/{% endif %}
+                                    {% endfor %}
+                                </li>
+                                <li>Tipo: {{ receita.get_tipo_display }}</li>
+                                <li>Duração: {{ receita.tempo_preparo }} minuto(s)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

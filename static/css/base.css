@@ -1,0 +1,81 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: white;
+}
+
+button:hover {
+    cursor: pointer;
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
+    color: white;
+    background-color: black;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 110px;
+}
+
+#sub_header {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 1260px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(87, 44, 44);
+    margin: 10px 10px 0 10px;
+}
+
+#logo {
+    height: 100px;
+}
+
+#bloco_logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#bloco_pesquisa > * {
+    padding: 5px;
+    border-radius: 10px;
+}
+
+#bloco_conta {
+    padding-right: 15px;
+}
+
+#bloco_conta button {
+    padding: 5px;
+    border-radius: 10px;
+}
+
+footer {
+    width: 100%;
+    margin-top: auto; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(87, 44, 44);
+    color: white;
+    font-size: small;
+    line-height: 5px;
+    padding: 5px 0 5px 0;
+    height: 74px;
+}

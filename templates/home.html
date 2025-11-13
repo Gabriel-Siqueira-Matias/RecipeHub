@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div id="sub_main">
+    <div class="bloco">
+        <div class="sobre">
+            <h2>Mais populares</h2>
+        </div>
+        <div class="itens">
+            {% for receita in novas_receitas %}
+                <a href="{% url 'receitas:detalhe_receita' receita.id%}">
+                    <div class="item">
+                        <div class="imagem_receita">
+                            {% with midia=receita.midias.first %}
+                                <img src="{{ midia.arquivo.url }}" alt="Imagem de {{receita.nome}}">
+                            {% endwith %}
+                        </div>
+                        <div class="informacao_receita">
+                            <strong>{{ receita.nome }}</strong>
+                            <ul>
+                                <li class="lista_categoria">Categorias:
+                                    {% for categoria in receita.categorias.all %}
+                                        <span class="item_categoria">{{ categoria.nome }}</span>
+                                        {% if not forloop.last %}/{% endif %}
+                                    {% endfor %}
+                                </li>
+                                <li>Tipo: {{ receita.get_tipo_display }}</li>
+                                <li>Duração: {{ receita.tempo_preparo }} minuto(s)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+            <a href="{% url 'receitas:lista_receitas' %}">
+                <div class="item">
+                    <p>=></p>
+                    <p>Ver mais</p>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="bloco">
+        <div class="sobre">
+            <h2>Mais recentes</h2>
+        </div>
+        <div class="itens">
+            {% for receita in novas_receitas %}
+                <a href="{% url 'receitas:detalhe_receita' receita.id%}">
+                    <div class="item">
+                        <div class="imagem_receita">
+                            {% with midia=receita.midias.first %}
+                                <img src="{{ midia.arquivo.url }}" alt="Imagem de {{receita.nome}}">
+                            {% endwith %}
+                        </div>
+                        <div class="informacao_receita">
+                            <strong>{{ receita.nome }}</strong>
+                            <ul>
+                                <li class="lista_categoria">Categorias:
+                                        {% for categoria in receita.categorias.all %}
+                                            <span class="item_categoria">{{ categoria.nome }}</span>
+                                            {% if not forloop.last %}/{% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </li>
+                                <li>Tipo: {{ receita.get_tipo_display }}</li>
+                                <li>Duração: {{ receita.tempo_preparo }} minuto(s)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+            <a href="{% url 'receitas:lista_receitas' %}">
+                <div class="item">
+                    <p>=></p>
+                    <p>Ver mais</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

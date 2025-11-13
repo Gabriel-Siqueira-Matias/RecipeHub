@@ -1,0 +1,65 @@
+body {
+    background-color: rgb(153, 115, 115);
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#sub_main {
+    width: 1261px;
+    height: 690px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 8px 0 8px 0;
+    box-shadow: 12px 12px 12px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid black;
+    background-color: rgb(110, 61, 61);
+}
+
+#botao_cadastro {
+    margin-top: 8px;
+    padding: 18px;
+    border-radius: 8px;
+}
+
+#bloco {
+    height: 400px;
+}
+
+form {
+    height: 500px;
+    width: 600px;
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #795252;
+}
+
+#bloco label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+#bloco input {
+    width: 550px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 4px;
+    margin-left: 8px;
+}
+
+h2 {
+    color: white;
+}
+
+p {
+    color: rgb(0, 0, 0);
+}
