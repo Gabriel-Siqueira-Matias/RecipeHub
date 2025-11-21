@@ -1,55 +1,41 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Perfil: {{ dono_perfil.user.username }}{% endblock %}
+{% block title %}lista de {{ dono_perfil.user.username }}{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/usuarios/perfil.css' %}" />
+<link rel="stylesheet" href="{% static 'css/usuarios/lista_perfil.css' %}" />
 {% endblock %}
 
 {% block content %}
 <div id="sub_main">
     
-    <!-- Bloco com as informações do usuario -->
-    <div id="bloco_informacoes">
-        <div id="dados">
-            <h2>Perfil de {{ dono_perfil.user.username }}</h2>
-            <p><strong>E-mail: </strong>{{ dono_perfil.user.email }}</p>
-            <p><strong>Tipo de Usuário: </strong>{{ dono_perfil.get_tipo_display }}</p>
-            <p><strong>Total de Receitas: </strong>{{receitas_publicas|length}} (Públicas)
-                {% if dono %}
-                    e {{receitas|length}} (Total)
-                {% endif %}
-            </p>
-        </div>
-        {% if dono %}
-            <div id="acao">
-                <a href="{% url 'receitas:criar_receita' %}" class="botao_criar">
-                    <button>Criar Nova Receita ➕</button>
-                </a>
-            </div>
-        {% endif %}
-    </div>
-
-    <!-- Bloco receitas mais recentes -->
+    <!-- Bloco receitas todas as receitas -->
     <div class="bloco">
         <!-- sobre o bloco -->
         <div class="sobre">
+            <a href="{% url 'usuarios:perfil' username=dono_perfil.user.username %}">
+                <div id="botao_voltar">← Voltar para o Perfil</div>
+            </a>
             {% if dono %}
-                <h2>Suas receitas mais recentes</h2>
+                <h2>Todas as suas receitas</h2>
             {% else %}
-                <h2>Mais recentes públicas</h2>
+                <h2>Todas as receitas públicas de {{ dono_perfil.user.username }}</h2>
             {% endif %}
         </div>
         <!-- Espaço q fica os cards das receitas -->
         <div class="itens">
-            {% for receita in novas_receitas %}
+            {% for receita in receitas %}
                 <a href="{% url 'receitas:detalhe_receita' receita.id%}">
                     <!-- Card da receita -->
                     <div class="item">
                         <!-- Imagem do card -->
                         <div class="imagem_receita">
                             {% with midia=receita.midias.first %}
-                                <img src="{{ midia.arquivo.url }}" alt="Imagem de {{receita.nome}}">
+                                {% if midia and midia.tipo == 'IMAGEM' %}
+                                    <img src="{{ midia.arquivo.url }}" alt="Imagem de {{receita.nome}}">
+                                {% else %}
+                                    <img src="{% static 'img/home/ErrorDonut_by_freepik.jpg' %}" alt="Erro carregamento imagem">
+                                {% endif %}
                             {% endwith %}
                         </div>
                         <!-- Informações do card -->
@@ -69,15 +55,7 @@
                     </div>
                 </a>
             {% endfor %}
-            <!-- Card q leva para todas as receitas -->
-            <a href="{% url 'usuarios:lista_perfil' username=dono_perfil.user.username %}">
-                <div class="item">
-                    <p>=></p>
-                    <p>Ver mais</p>
-                </div>
-            </a>
         </div>
     </div>
-
 </div>
 {% endblock %}

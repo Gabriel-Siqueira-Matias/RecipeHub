@@ -1,0 +1,325 @@
+:root {
+    /* Cores existentes */
+    --cor_fundo_tela: #FCF5E3; /* Bege/Quase Branco */
+    --cor_fundo_bloco_central: #6B3E2E; /* Marrom Escuro Principal */
+    --cor_texto_sobre: white;
+    --cor_detalhe_acento: #F8D5A3; /* Acabamento / Destaque (Bege Claro) */
+    --cor_detalhe_secundario: #A06C59; /* Segundo tom de marrom para fundo de blocos */
+    --cor_borda: rgba(255, 255, 255, 0.2);
+    --cor_input_fundo: #8C5C48; /* Tom intermediário mais escuro para o fundo dos inputs */
+    --cor_input_texto: white;
+    --cor_erro: #dc3545; /* Vermelho */
+}
+
+body {
+  background-color: var(--cor_fundo_tela);
+}
+
+/* Container Principal - Mantém a estética centralizada e escura */
+#sub_main_criar {
+    width: 99%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--cor_detalhe_secundario);
+    background-color: var(--cor_fundo_bloco_central);
+    border-radius: 20px;
+    padding: 30px;
+    box-sizing: border-box;
+    color: var(--cor_texto_sobre);
+}
+
+.header_criar {
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--cor_borda);
+    margin-bottom: 30px;
+    text-align: center; /* Centraliza o título */
+}
+
+.header_criar h1 {
+    font-family: 'Merriweather', serif;
+    font-size: 2.8em;
+    margin: 0;
+    color: var(--cor_detalhe_acento);
+}
+
+.header_criar p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 5px;
+    font-size: 1em;
+}
+
+/* Bloco Geral do Formulário (Sessões) */
+.bloco_form {
+    /* Usa o tom secundário para os blocos internos */
+    background-color: var(--cor_detalhe_secundario); 
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.bloco_form h2 {
+    color: var(--cor_detalhe_acento);
+    font-family: 'Merriweather', serif;
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--cor_fundo_bloco_central);
+    margin-bottom: 20px;
+    font-size: 1.6em;
+}
+
+/* Estilo dos Campos Comuns */
+.form_campo {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form_campo label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--cor_texto_sobre);
+    font-size: 0.95em;
+}
+
+/* Estilo para todos os inputs de texto, número, select e textarea */
+.form_campo input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):not([type="submit"]),
+.form_campo select, 
+.form_campo textarea {
+    background-color: var(--cor_input_fundo);
+    border: 1px solid var(--cor_borda);
+    color: var(--cor_input_texto);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form_campo input:focus, .form_campo select:focus, .form_campo textarea:focus {
+    border-color: var(--cor_detalhe_acento);
+    outline: none;
+    box-shadow: 0 0 5px var(--cor_detalhe_acento);
+}
+
+/* Campos em Linha (Porções, Tempo, Estado) */
+.campos_inline {
+    display: flex;
+    gap: 20px;
+}
+
+.campos_inline .form_campo {
+    flex: 1;
+}
+
+/* Estilo para Radio e Checkbox M2M */
+.checkbox_group label {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.radio_options, .checkbox_options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 10px;
+    border: 1px solid var(--cor_input_fundo);
+    border-radius: 8px;
+    background-color: var(--cor_input_fundo);
+}
+
+.radio_options label, .checkbox_options label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    padding: 5px 10px;
+    border-radius: 6px;
+    /* Usa a cor de destaque para indicar seleção */
+}
+
+.radio_options input[type="radio"], .checkbox_options input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: var(--cor_detalhe_acento);
+    width: 16px;
+    height: 16px;
+}
+
+/* Estilo de erro */
+.form_erro {
+    color: var(--cor_erro);
+    font-size: 0.85em;
+    margin-top: 5px;
+    padding: 5px 0;
+}
+
+.form_global_erro {
+    border: 1px solid var(--cor_erro);
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+    background-color: rgba(220, 53, 69, 0.15);
+}
+
+/* --- Formsets (Ingredientes, Etapas, Mídias) --- */
+.dica {
+    color: var(--cor_detalhe_acento);
+    font-style: italic;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+.form_row {
+    display: flex;
+    align-items: center; /* Alinha os itens verticalmente ao centro */
+    gap: 10px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    background-color: var(--cor_input_fundo); 
+    border-radius: 8px;
+    border: 1px solid var(--cor_fundo_bloco_central);
+    transition: background-color 0.3s;
+}
+
+.form_row:hover {
+    background-color: #795252; /* Um tom mais escuro no hover para indicar interação */
+}
+
+/* Esconde as labels dos formsets, já que o cabeçalho já as explica */
+.form_row .form_campo label {
+    display: none;
+}
+
+/* Remove a margem do campo_opcional dentro do form_row */
+.form_row .form_campo {
+    margin-bottom: 0;
+}
+
+
+/* Colunas do Ingrediente */
+.ingrediente_form .campo_nome { flex: 4; }
+.ingrediente_form .campo_qtd { flex: 1; min-width: 60px; }
+.ingrediente_form .campo_unidade { flex: 2; min-width: 120px; }
+.ingrediente_form .campo_opcional { flex: 1; display: flex; align-items: center; justify-content: flex-end; }
+.ingrediente_form .campo_opcional label { margin-right: 5px; display: inline-block; font-weight: normal; } /* Mostra a label aqui */
+.ingrediente_form .campo_delete { flex: 0 0 30px; }
+
+
+/* Colunas da Etapa */
+.etapa_form { align-items: flex-start; } /* A etapa tem textarea, alinha no topo */
+.etapa_form .campo_conteudo { flex: 1; }
+.etapa_form .campo_delete { flex: 0 0 30px; margin-top: 10px; } /* Mantenha o botão no topo */
+
+/* Colunas da Mídia */
+.midia_form .campo_tipo { flex: 2; min-width: 120px; }
+.midia_form .campo_arquivo { flex: 3; }
+.midia_form .campo_delete { flex: 0 0 30px; }
+
+/* Estilo do Checkbox de Delete */
+.campo_delete {
+    align-self: center; /* Alinha o checkbox no centro */
+}
+.campo_delete label {
+    display: none; /* Esconde a label "Deletar" */
+}
+.campo_delete input[type="checkbox"] {
+    accent-color: var(--cor_erro);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+
+/* Botão de Adicionar Formset */
+.btn_add_formset {
+    background-color: var(--cor_fundo_bloco_central);
+    color: var(--cor_detalhe_acento);
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--cor_detalhe_acento);
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: background-color 0.2s, color 0.2s;
+    font-size: 1em;
+}
+
+.btn_add_formset:hover {
+    background-color: var(--cor_detalhe_acento);
+    color: var(--cor_fundo_bloco_central);
+}
+
+/* Botão de Submissão Principal */
+.btn_submit_receita {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    background-color: var(--cor_detalhe_acento);
+    color: var(--cor_fundo_bloco_central);
+    border: none;
+    border-radius: 12px;
+    font-size: 1.3em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: background-color 0.2s;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn_submit_receita:hover {
+    background-color: #FCF5E3; /* Cor mais clara do background da tela */
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .header_criar h1 {
+        font-size: 2em;
+    }
+    
+    .campos_inline {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .form_row {
+        flex-direction: column;
+        align-items: stretch; /* Estica os campos na coluna */
+        gap: 5px;
+        padding: 15px 10px;
+    }
+
+    /* Colunas dos formsets agora ocupam 100% */
+    .ingrediente_form .campo_nome,
+    .ingrediente_form .campo_qtd,
+    .ingrediente_form .campo_unidade,
+    .etapa_form .campo_conteudo,
+    .midia_form .campo_tipo,
+    .midia_form .campo_arquivo {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+    
+    /* Reajusta o layout da opção opcional para mobile */
+    .ingrediente_form .campo_opcional { 
+        justify-content: flex-start; 
+        flex: 1 1 100%;
+        padding-top: 5px;
+        border-top: 1px dotted var(--cor_borda);
+    }
+    .ingrediente_form .campo_delete,
+    .etapa_form .campo_delete,
+    .midia_form .campo_delete {
+        align-self: flex-start;
+        margin-top: 5px;
+    }
+
+    /* Reajusta a exibição da label do campo opcional */
+    .ingrediente_form .campo_opcional label {
+        display: inline-block; /* Garante que a label "Opcional" apareça */
+    }
+}

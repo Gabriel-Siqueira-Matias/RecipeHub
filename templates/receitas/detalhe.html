@@ -2,90 +2,177 @@
 {% load static %}
 
 {% block title %}{{ receita.nome }}{% endblock %}
+
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/receitas/detalhe.css' %}" />
+<link rel="stylesheet" href="{% static 'css/receitas/detalhe.css' %}" />
 {% endblock %}
 
 {% block content %}
-<div id="sub_main">
-    <div id="nome">
-        <h2>{{ receita.nome }}</h2>
+<div id="sub_main_detalhe">
+    <div class="header_detalhe">
+        
+        <!-- NOVO CONTAINER: Alinha Título e Botões em oposição -->
+        <div class="titulo_e_acoes">
+            <!-- Título -->
+            <h1 class="titulo_receita">{{ receita.nome }}</h1>
+            
+            <!-- Botões de Ação (Apenas para o dono) - Reposicionados -->
+            {% if dono %}
+                <div class="botoes_acao_header">
+                    <!-- Botão Editar -->
+                    <a href="{% url 'receitas:editar' pk=receita.id %}" class="btn_acao btn_editar">Editar</a>
+                    
+                    <!-- Botão Excluir: Formulário POST Escondido + Botão de Gatilho -->
+                    <form id="form_excluir_{{ receita.id }}" 
+                          method="POST" 
+                          action="{% url 'receitas:excluir' pk=receita.id %}" 
+                          style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                    
+                    <!-- Este botão chama a função JS para abrir o modal -->
+                    <button type="button" 
+                            onclick="mostrarConfirmacaoExclusao('{{ receita.id }}', '{{ receita.nome|escapejs }}')" 
+                            class="btn_acao btn_excluir">
+                        Excluir
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Nome e Autor (Mantido abaixo) -->
+        <p class="autor_info">
+            Por <a href="{% url 'usuarios:perfil' username=receita.autor.user.username %}">{{ receita.autor.user.username }}</a>
+            | Criado em: {{ receita.criado_em|date:"d/m/Y" }}
+        </p>
+        
     </div>
-    <div id="midias">
-        <button id="anterior"><=</button>
-        <div id="midia-container">
-        {% for midia in receita.midias.all %}
-            <div class="midia_elemento {% if forloop.first %}active{% endif %}">
-                {% if midia.tipo == 'IMAGEM' %}
-                    <img src="{{ midia.arquivo.url }}" alt="Imagem de {{receita.nome}}">
-                    {% elif midia.tipo == 'VIDEO' %}
-                        <video controls>
-                            <source src="{{ midia.arquivo.url}}">
-                        </video>
+
+    <div class="conteudo_principal">
+        <!-- 1. Bloco de Mídia (Carrossel) e Informações Gerais -->
+        <div class="bloco_visao_geral">
+            
+            <!-- Carrossel de Mídia -->
+            <div id="carrossel_midia" class="carrossel">
+                <div class="carrossel_conteudo">
+                    {% for midia in receita.midias.all %}
+                        <div class="midia_item">
+                            {% if midia.tipo == 'IMAGEM' %}
+                                <img src="{{ midia.arquivo.url }}" alt="Mídia da Receita: {{ receita.nome }}">
+                            {% elif midia.tipo == 'VIDEO' %}
+                                <video controls src="{{ midia.arquivo.url }}">
+                                    Seu navegador não suporta a tag de vídeo.
+                                </video>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <div class="midia_item">
+                            <img src="{% static 'img/home/ErrorDonut_by_freepik.jpg' %}" alt="Nenhuma mídia disponível">
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- Controles de Navegação (Se houver mais de 1 mídia) -->
+                {% if receita.midias.count > 1 %}
+                    <button class="prev_btn">&lt;</button>
+                    <button class="next_btn">&gt;</button>
+                    <div class="pontos_navegacao"></div>
+                {% endif %}
+            </div>
+            
+            <!-- Informações Essenciais -->
+            <div class="informacoes_basicas">
+                <h2>Detalhes</h2>
+                <p><strong>Porções:</strong> {{ receita.porcoes }}</p>
+                <p><strong>Tempo de Preparo:</strong> {{ receita.tempo_preparo }} min</p>
+                <p><strong>Tipo:</strong> <span class="tag_tipo">{{ receita.get_tipo_display }}</span></p>
+
+                <!-- Tags de Categorias e Métodos -->
+                <div class="tags_container">
+                    {% if receita.categorias.all %}
+                    <div class="tag_group">
+                        <p class="tag_titulo">Categorias</p>
+                        <div class="tags">
+                            {% for categoria in receita.categorias.all %}
+                                <span class="tag_categoria">{{ categoria.nome }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if receita.metodos.all %}
+                    <div class="tag_group">
+                        <p class="tag_titulo">Métodos</p>
+                        <div class="tags">
+                            {% for metodo in receita.metodos.all %}
+                                <span class="tag_metodo">{{ metodo.nome }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
                     {% endif %}
                 </div>
-            {% endfor %}
-        </div>
-        <button id="proximo">=></button>
-    </div>
-    <div id="informacoes">
-        <div class="informacao">
-            <div class="campo">
-                Categorias
-            </div>
-            <div class="elementos">
-                {% for categoria in receita.categorias.all %}
-                    <p class="elemento">&bull; {{ categoria.nome }}</p>
-                {% endfor %}
             </div>
         </div>
-        <div class="informacao">
-            <div class="campo">
-                Tipo
+
+        <!-- 2. Bloco de Ingredientes e Instruções de Preparo -->
+        <div class="bloco_detalhado">
+            <div class="secao ingredientes">
+                <h2>Ingredientes</h2>
+                <ul>
+                    {% for ingrediente in receita.ingredientes.all %}
+                        <li class="ingrediente_item">
+                            <input type="checkbox" id="ingrediente_{{ forloop.counter }}">
+                            <label for="ingrediente_{{ forloop.counter }}">
+                                {{ ingrediente.quantidade }} 
+                                {{ ingrediente.get_unidade_display }} de 
+                                <strong>{{ ingrediente.nome }}</strong>
+                                {% if ingrediente.opcional %}<span class="opcional">(Opcional)</span>{% endif %}
+                            </label>
+                        </li>
+                    {% empty %}
+                        <li>Nenhum ingrediente listado.</li>
+                    {% endfor %}
+                </ul>
             </div>
-            <div class="elementos">
-                <p class="elemento">&bull; {{ receita.get_tipo_display }}</p>
-            </div>
-        </div>
-        <div class="informacao">
-            <div class="campo">
-                Duração
-            </div>
-            <div class="elementos">
-                <p class="elemento">&bull; {{ receita.tempo_preparo }} minuto(s)</p>
-            </div>
-        </div>
-        <div class="informacao">
-            <div class="campo">
-                Metodos
-            </div>
-            <div class="elementos">
-                {% for metodo in receita.metodos.all %}
-                    <p class="elemento">&bull; {{ metodo.nome }}</p>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="informacao">
-            <div class="campo">
-                Porções
-            </div>
-            <div class="elementos">
-                <p class="elemento">&bull; {{ receita.porcoes }} porçõe(s)
+            
+            <div class="secao preparo">
+                <h2>Modo de Preparo</h2>
+                <ol>
+                    {% for etapa in receita.preparo.all %}
+                        <li class="etapa_item">
+                            <p>
+                                <strong>Passo {{ forloop.counter }}:</strong>
+                                <br>{{ etapa.conteudo }}
+                            </p>
+                        </li>
+                    {% empty %}
+                        <li>Nenhuma etapa de preparo detalhada.</li>
+                    {% endfor %}
+                </ol>
             </div>
         </div>
     </div>
-    <div id="como_fazer">
-        <ul><span>Ingredientes</span>
-            {% for ingrediente in receita.ingredientes.all %}
-                <li>{{ingrediente.quantidade}} {{ingrediente.get_unidade_display}} de {{ ingrediente.nome }}
-            {% endfor %}
-        </ul>
-        <ul><span>Como Fazer:</span>
-            <li>{{ receita.preparo }}
-        </ul>
+    
+    <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO (NOVO: Adicionado ao final) -->
+    {% if dono %}
+    <div id="modal_confirmacao_exclusao" class="modal_overlay" style="display: none;">
+        <div class="modal_conteudo">
+            <h3>Confirmar Exclusão</h3>
+            <p>Tem certeza de que deseja excluir permanentemente a receita: 
+               <br>"<strong id="receita_nome_modal"></strong>"?</p>
+            <p class="aviso_irreversivel">Esta ação não pode ser desfeita.</p>
+            
+            <div class="modal_botoes">
+                <button id="btn_cancelar_exclusao" class="btn_acao btn_cancelar">Cancelar</button>
+                <!-- Este botão aciona o envio do formulário via JS -->
+                <button id="btn_confirmar_exclusao" class="btn_acao btn_excluir">Sim, Excluir</button>
+            </div>
+        </div>
     </div>
+    {% endif %}
+
 </div>
 {% endblock %}
-{% block extra_scripts %}
-    <script src="{% static 'js/receitas/detalhe.js' %}"></script>
+
+{% block extra_js %}
+<script src="{% static 'js/receitas/detalhe.js' %}"></script>
 {% endblock %}

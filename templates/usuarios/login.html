@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}langogin{% endblock %}
+{% block title %}login{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/usuarios/login.css' %}" />
 {% endblock %}
@@ -14,7 +14,7 @@
         <div id="bloco">
             {{ form.as_p }}
         </div>
-        <button type="submit" id="botao_cadastro">Enviar</button>
+        <button type="submit" id="botao_login">Enviar</button>
     </form>
     <p>
         Ainda não tem conta? <a href="{% url 'usuarios:cadastro' %}">Cadastre-se</a>

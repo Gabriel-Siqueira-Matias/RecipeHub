@@ -1,43 +1,67 @@
+:root {
+    --cor_texto_hover_base: white;
+    --cor_fundo_hover_base: #6B3E2E;
+    --cor_fundo_footer_header_base: rgb(110, 61, 61);
+    --cor_texto_base: #F8D5A3;
+}
+
 body {
+    position: relative;
     padding: 0;
     margin: 0;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    margin-top: 110px;
+}
+
+h1, h2, h3 {
+    font-family: 'Merriweather', serif;
 }
 
 a {
     text-decoration: none;
-    color: black;
+    color: var(--cor_texto_base);
 }
 
 a:hover {
-    color: white;
+    color: var(--cor_texto_hover_base);
 }
 
-button:hover {
+header button:hover {
+    color: var(--cor_texto_hover_base);
+    background-color: var(--cor_fundo_hover_base);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
     cursor: pointer;
-    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
-    color: white;
-    background-color: black;
 }
 
 header {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-bottom: 110px;
 }
 
 #sub_header {
     position: fixed;
     top: 0;
     z-index: 100;
-    width: 1260px;
+    width: 99%;
+    max-width: 1260px;
     border-radius: 20px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(87, 44, 44);
-    margin: 10px 10px 0 10px;
+    background-color: var(--cor_fundo_footer_header_base);
+    margin: 10px auto;
+    box-sizing: border-box;
+    flex-wrap: wrap;
 }
 
 #logo {
@@ -66,14 +90,16 @@ header {
 }
 
 footer {
+    position: static;
+    margin-top: 40px;
     width: 100%;
     margin-top: auto; 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgb(87, 44, 44);
-    color: white;
+    background-color: var(--cor_fundo_footer_header_base);
+    color: var(--cor_texto_base);
     font-size: small;
     line-height: 5px;
     padding: 5px 0 5px 0;

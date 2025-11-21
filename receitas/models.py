@@ -38,7 +38,6 @@ class Receita(models.Model):
     tipo = models.CharField("Tipo", max_length=15, default="NENHUM", choices=TIPOS)
     porcoes = models.PositiveIntegerField("Porções")
     tempo_preparo = models.PositiveIntegerField("Tempo de preparo (minutos)", help_text="Informe o tempo total necessário em minutos")
-    preparo = models.TextField("Preparo")
     estado = models.CharField("Estado", max_length=10, default="PRIVADO", choices=ESTADOS)
     autor = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name="receitas", verbose_name="Autor")
     criado_em = models.DateTimeField("Criado em", auto_now_add=True)
@@ -58,7 +57,6 @@ class Ingrediente(models.Model):
         ('COLHER_SOPA', 'Colher(es) de sopa'),
         ('GRAMA', 'Grama(s) / g(s)'),
         ('ML', 'Mililitro(s) / mL(s)'),
-        ('OPCIONAL', 'A gosto'),
         ('UNIDADE', 'unidade(s)'),
         ('XICARA', 'Xicara(s)'),
     ]
@@ -67,6 +65,7 @@ class Ingrediente(models.Model):
     nome = models.CharField("Nome", max_length=100)
     quantidade = models.PositiveIntegerField("Quantidade")
     unidade = models.CharField("Unidade", max_length=15, choices=UNIDADES)
+    opcional = models.BooleanField("Opcional", default=False)
 
     def __str__(self):
         return f"{self.quantidade} {self.get_unidade_display()} de {self.nome}"
@@ -89,3 +88,14 @@ class Midia(models.Model):
     
     class Meta:
         verbose_name_plural = "Mídias"
+
+class Etapa(models.Model):
+    receita = models.ForeignKey(Receita, on_delete=models.CASCADE, related_name="preparo")
+    conteudo = models.TextField("Conteudo")
+
+    def __str__(self):
+        return f"Etapa {self.id} da receita de {self.receita.nome}"
+    
+    class Meta:
+        verbose_name_plural = "Preparo"
+        ordering = ["id"]

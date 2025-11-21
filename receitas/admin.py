@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, Metodo, Receita, Ingrediente, Midia
+from .models import Categoria, Metodo, Receita, Ingrediente, Midia, Etapa
 from django.utils.html import mark_safe
 from django.forms.models import BaseInlineFormSet
 from django.core.exceptions import ValidationError
@@ -30,6 +30,16 @@ class MidiaInlineFormSet(BaseInlineFormSet):
         ]
         if len(valid_forms) == 0:
             raise ValidationError("Pelo menos uma mídia é obrigatória.")
+        
+class EtapaInlineFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        valid_forms = [
+            form for form in self.forms
+            if form.cleaned_data and not form.cleaned_data.get('DELETE', False)
+        ]
+        if len(valid_forms) == 0:
+            raise ValidationError("Pelo menos uma etapa é obrigatória.")
 
 class IngredienteInline(admin.TabularInline):
     model = Ingrediente
@@ -55,13 +65,18 @@ class MidiaInline(admin.TabularInline):
         return "—"
     preview.short_description = "Pré-visualização"
 
+class EtapaInline(admin.TabularInline):
+    model = Etapa
+    formset = EtapaInlineFormSet
+    extra = 1
+
 class ReceitaAdmin(admin.ModelAdmin):
     list_display = ("nome", "autor", "mostrar_categorias", "mostrar_metodos", "tipo", "porcoes", "tempo_preparo", "criado_em")
     search_fields = ("nome",)
     list_filter = ("tipo", "categorias", "metodos", "estado")
     filter_horizontal = ("categorias", "metodos")
     date_hierarchy = "criado_em"
-    inlines = [IngredienteInline, MidiaInline]
+    inlines = [IngredienteInline, EtapaInline, MidiaInline]
 
     def mostrar_categorias(self, obj):
         return ", ".join([c.nome for c in obj.categorias.all()])

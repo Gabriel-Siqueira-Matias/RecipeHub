@@ -5,13 +5,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %} RecipeHub {% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     {% block extra_css %}{% endblock %}
   </head>
 
   <body>
     <header>
-      {% block header %}
       <div id="sub_header">
         <a href="{% url 'home' %}">
           <div id="bloco_logo">
@@ -26,7 +28,7 @@
         </div>
         <div id="bloco_conta">
           {% if user.is_authenticated %}
-            <a href="{% url 'usuarios:perfil' %}">Olá, {{ user.username }}!</a>
+            <a href="{% url 'usuarios:perfil' username=user.username %}">Olá, {{ user.username }}!</a>
             <form action="{% url 'usuarios:logout' %}" method="post" style="display:inline;">
               {% csrf_token %}
               <button type="submit">Sair</button>
@@ -37,18 +39,15 @@
           {% endif %}
         </div>
       </div>
-      {% endblock %}
     </header>
     <main>
         {% block content %}
         {% endblock %}
     </main>
     <footer>
-      {% block footer %}
       <p>RecipeHub</p>
       <p>2025</p>
-      {% endblock %}
     </footer>
-    {% block extra_scripts %}{% endblock %}
+    {% block extra_js %}{% endblock %}
   </body>
 </html>

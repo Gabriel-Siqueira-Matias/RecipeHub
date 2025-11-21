@@ -1,26 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Home{% endblock %}
+{% block title %}lista{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/receitas/lista.css' %}" />
 {% endblock %}
 
 {% block content %}
 <div id="sub_main">
+    
+    <!-- Bloco receitas todas as receitas -->
     <div class="bloco">
+        <!-- sobre o bloco -->
         <div class="sobre">
             <h2>Todas as receitas</h2>
         </div>
+        <!-- Espaço q fica os cards das receitas -->
         <div class="itens">
             {% for receita in receitas %}
                 <a href="{% url 'receitas:detalhe_receita' receita.id%}">
+                    <!-- Card da receita -->
                     <div class="item">
+                        <!-- Imagem do card -->
                         <div class="imagem_receita">
                             {% with midia=receita.midias.first %}
-                                <img src="{{ midia.arquivo.url }}" alt="Imagem de {{receita.nome}}">
+                                {% if midia and midia.tipo == 'IMAGEM' %}
+                                    <img src="{{ midia.arquivo.url }}" alt="Imagem de {{receita.nome}}">
+                                {% else %}
+                                    <img src="{% static 'img/home/ErrorDonut_by_freepik.jpg' %}" alt="Erro carregamento imagem">
+                                {% endif %}
                             {% endwith %}
                         </div>
+                        <!-- Informações do card -->
                         <div class="informacao_receita">
                             <strong>{{ receita.nome }}</strong>
                             <ul>
