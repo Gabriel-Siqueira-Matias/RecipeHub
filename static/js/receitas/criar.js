@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-
-    // Função principal para gerenciar os formsets dinâmicos.
     function setupFormset(formsetId) {
-        const container = document.getElementById(`${formsetId}-form-list`);
-        const addButton = document.querySelector(`.btn_add_formset[data-formset-id="${formsetId}"]`);
+        const container = document.getElementById(`lista_${formsetId}_formulario`);
+        const addButton = document.querySelector(`.botao_adicionar[data-formset-id="${formsetId}"]`);
         const totalFormsInput = document.getElementById(`id_${formsetId}-TOTAL_FORMS`);
         // O template vazio AGORA DEVE SER A TAG <template>
-        const emptyFormTemplateTag = document.getElementById(`${formsetId}-empty-form-template`);
+        const emptyFormTemplateTag = document.getElementById(`${formsetId}_formulario_template`);
         
         // Verificação de segurança: se algum elemento essencial estiver faltando, aborta.
         if (!container || !addButton || !totalFormsInput || !emptyFormTemplateTag) {
@@ -22,10 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             let currentTotal = parseInt(totalFormsInput.value);
             
-            // 1. Clona o conteúdo do template (<div class="... form_row">...</div>)
+            // 1. Clona o conteúdo do template (<div class="... formulario_row">...</div>)
             const newFormContent = emptyFormTemplateTag.content.cloneNode(true);
             
-            // O novo formulário (a linha .form_row) é o primeiro filho do conteúdo clonado.
+            // O novo formulário (a linha .formulario_row) é o primeiro filho do conteúdo clonado.
             const newFormRow = newFormContent.firstElementChild;
             
             // 2. Itera sobre todos os elementos para substituir '__prefix__'
@@ -76,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Efeito visual de marcação para deletar
                 deleteInput.addEventListener('change', function() {
-                    const row = this.closest('.form_row');
+                    const row = this.closest('.formulario_row');
                     if (row) {
                         // Aplica ou remove a cor de fundo mais escura ao marcar para deletar
                         row.style.backgroundColor = this.checked ? '#795252' : ''; 
@@ -102,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addButton.addEventListener('click', addForm);
 
         // 2. Configura o listener de remoção para todos os campos existentes
-        container.querySelectorAll('.form_row').forEach(setupDeleteListener);
+        container.querySelectorAll('.formulario_row').forEach(setupDeleteListener);
     }
 
     // Inicializa todos os formsets que precisam de funcionalidade dinâmica

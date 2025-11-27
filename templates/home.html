@@ -67,7 +67,7 @@
         <!-- Espaço q fica os cards das receitas -->
         <div class="itens">
             {% for receita in novas_receitas %}
-                <a href="{% url 'receitas:detalhe_receita' receita.id%}">
+                <a href="{% url 'receitas:detalhe_receita' receita.id %}">
                     <!-- Card da receita -->
                     <div class="item">
                         <!-- Imagem do card -->

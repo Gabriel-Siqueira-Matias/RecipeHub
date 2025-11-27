@@ -5,10 +5,12 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/receitas/detalhe.css' %}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 {% endblock %}
 
 {% block content %}
 <div id="sub_main_detalhe">
+    
     <div class="header_detalhe">
         
         <!-- NOVO CONTAINER: Alinha Título e Botões em oposição -->
@@ -16,28 +18,47 @@
             <!-- Título -->
             <h1 class="titulo_receita">{{ receita.nome }}</h1>
             
-            <!-- Botões de Ação (Apenas para o dono) - Reposicionados -->
-            {% if dono %}
-                <div class="botoes_acao_header">
+            <!-- Botões de Ação (Apenas para o dono, mas o favorito é para todos autenticados) -->
+            <div class="botoes_acao_header">
+                <!-- NOVO: Botão de Favoritar (para qualquer usuário logado) -->
+                {% if user.is_authenticated and not dono %}
+                <button 
+                    id="btn_favoritar" 
+                    data-receita-id="{{ receita.id }}" 
+                    class="btn_acao btn_favorito {% if favoritado %}favoritado{% endif %}"
+                    aria-label="{% if favoritado %}Desfavoritar{% else %}Favoritar{% endif %}"
+                    title="{% if favoritado %}Remover dos Favoritos{% else %}Adicionar aos Favoritos{% endif %}"
+                >
+                    <!-- Ícone que será alternado via JS -->
+                    <i class="fas {% if favoritado %}fa-heart{% else %}fa-heart-o{% endif %}" id="icone_favorito"></i>
+                    <span class="texto_favorito">{% if favoritado %}
+                        Desfavoritar
+                    {% else %}
+                        Favoritar
+                    {% endif %}</span>
+                </button>
+                {% endif %}
+
+                {% if dono %}
                     <!-- Botão Editar -->
-                    <a href="{% url 'receitas:editar' pk=receita.id %}" class="btn_acao btn_editar">Editar</a>
+                    <a href="{% url 'receitas:editar_receita' receita.id %}" class="btn_acao btn_editar">Editar</a>
                     
                     <!-- Botão Excluir: Formulário POST Escondido + Botão de Gatilho -->
                     <form id="form_excluir_{{ receita.id }}" 
-                          method="POST" 
-                          action="{% url 'receitas:excluir' pk=receita.id %}" 
-                          style="display: none;">
+                        method="POST" 
+                        action="{% url 'receitas:excluir_receita' receita.id %}" 
+                        style="display: none;">
                         {% csrf_token %}
                     </form>
-                    
-                    <!-- Este botão chama a função JS para abrir o modal -->
+                
+                <!-- Este botão chama a função JS para abrir o modal -->
                     <button type="button" 
                             onclick="mostrarConfirmacaoExclusao('{{ receita.id }}', '{{ receita.nome|escapejs }}')" 
                             class="btn_acao btn_excluir">
                         Excluir
                     </button>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
         
         <!-- Nome e Autor (Mantido abaixo) -->
@@ -137,7 +158,7 @@
             <div class="secao preparo">
                 <h2>Modo de Preparo</h2>
                 <ol>
-                    {% for etapa in receita.preparo.all %}
+                    {% for etapa in receita.etapas.all %}
                         <li class="etapa_item">
                             <p>
                                 <strong>Passo {{ forloop.counter }}:</strong>

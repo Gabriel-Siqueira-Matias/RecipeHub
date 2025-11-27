@@ -1,134 +1,171 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+
+    /* =========================================================================
+     * 1. Lógica do Carrossel de Mídia
+     * ========================================================================= */
     const carrossel = document.getElementById('carrossel_midia');
-    
-    // Inicia a lógica do carrossel apenas se o elemento for encontrado
     if (carrossel) {
-        const carrosselConteudo = carrossel.querySelector('.carrossel_conteudo');
-        const midiaItens = carrossel.querySelectorAll('.midia_item');
+        const conteudo = carrossel.querySelector('.carrossel_conteudo');
+        const items = carrossel.querySelectorAll('.midia_item');
         const prevBtn = carrossel.querySelector('.prev_btn');
         const nextBtn = carrossel.querySelector('.next_btn');
-        const pontosContainer = carrossel.querySelector('.pontos_navegacao');
-
+        const navPontosContainer = carrossel.querySelector('.pontos_navegacao');
         let currentIndex = 0;
-        const totalItems = midiaItens.length;
+        const totalItems = items.length;
 
-        if (totalItems <= 1) {
-            if (prevBtn) prevBtn.style.display = 'none';
-            if (nextBtn) nextBtn.style.display = 'none';
-            if (pontosContainer) pontosContainer.style.display = 'none';
-        } else {
-             // Configura a largura total e dos itens
-            carrosselConteudo.style.width = `${totalItems * 100}%`;
-            midiaItens.forEach(item => {
-                item.style.width = `${100 / totalItems}%`;
+        if (totalItems > 1) {
+            // Cria os pontos de navegação
+            for (let i = 0; i < totalItems; i++) {
+                const ponto = document.createElement('span');
+                ponto.classList.add('ponto');
+                if (i === 0) ponto.classList.add('ativo');
+                ponto.addEventListener('click', () => {
+                    goToSlide(i);
+                });
+                navPontosContainer.appendChild(ponto);
+            }
+
+            const pontos = carrossel.querySelectorAll('.ponto');
+
+            function updateCarrossel() {
+                const offset = -currentIndex * 100;
+                conteudo.style.transform = `translateX(${offset}%)`;
+                
+                pontos.forEach((p, i) => {
+                    p.classList.toggle('ativo', i === currentIndex);
+                });
+            }
+
+            function goToSlide(index) {
+                currentIndex = index;
+                updateCarrossel();
+            }
+
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalItems - 1;
+                updateCarrossel();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex < totalItems - 1) ? currentIndex + 1 : 0;
+                updateCarrossel();
             });
             
-            function updateCarrossel() {
-                const offset = -currentIndex * (100 / totalItems);
-                carrosselConteudo.style.transform = `translateX(${offset}%)`;
-                updatePontos();
-            }
-
-            if (prevBtn) {
-                prevBtn.addEventListener('click', (event) => {
-                    event.preventDefault(); 
-                    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-                    updateCarrossel();
-                });
-            }
-
-            if (nextBtn) {
-                nextBtn.addEventListener('click', (event) => {
-                    event.preventDefault(); 
-                    currentIndex = (currentIndex + 1) % totalItems;
-                    updateCarrossel();
-                });
-            }
-            
-            function createPontos() {
-                 if (pontosContainer) {
-                    pontosContainer.innerHTML = '';
-                    for (let i = 0; i < totalItems; i++) {
-                        const ponto = document.createElement('div');
-                        ponto.classList.add('ponto');
-                        ponto.dataset.index = i;
-                        ponto.addEventListener('click', () => {
-                            currentIndex = i;
-                            updateCarrossel();
-                        });
-                        pontosContainer.appendChild(ponto);
-                    }
-                    updatePontos();
-                }
-            }
-
-            function updatePontos() {
-                if (pontosContainer) {
-                    const pontos = pontosContainer.querySelectorAll('.ponto');
-                    pontos.forEach((ponto, index) => {
-                        ponto.classList.toggle('ativo', index === currentIndex);
-                    });
-                }
-            }
-
-            createPontos();
+            // Inicializa a posição
             updateCarrossel();
         }
     }
 
-    // --- LÓGICA DO MODAL DE EXCLUSÃO ---
-    const modalOverlay = document.getElementById('modal_confirmacao_exclusao');
-    const btnConfirmar = document.getElementById('btn_confirmar_exclusao');
+
+    /* =========================================================================
+     * 2. Lógica do Modal de Confirmação de Exclusão (EXISTENTE NO HTML)
+     * ========================================================================= */
+    const modal = document.getElementById('modal_confirmacao_exclusao');
     const btnCancelar = document.getElementById('btn_cancelar_exclusao');
+    const btnConfirmar = document.getElementById('btn_confirmar_exclusao');
     const receitaNomeModal = document.getElementById('receita_nome_modal');
-    
     let receitaIdParaExcluir = null;
 
-    /**
-     * Exibe o modal de confirmação.
-     * Esta função é chamada pelo botão "Excluir" no HTML.
-     */
-    window.mostrarConfirmacaoExclusao = function(receitaId, receitaNome) {
-        receitaIdParaExcluir = receitaId;
-        if (receitaNomeModal) receitaNomeModal.textContent = receitaNome;
-        if (modalOverlay) {
-            modalOverlay.style.display = 'flex'; // Usa flex para centralizar
-        }
-    };
+    if (modal) {
+        // Função global para ser chamada pelo 'onclick' no template
+        window.mostrarConfirmacaoExclusao = (receitaId, nomeReceita) => {
+            receitaIdParaExcluir = receitaId;
+            receitaNomeModal.textContent = nomeReceita;
+            modal.style.display = 'flex'; // Exibe o modal
+        };
 
-    function esconderModal() {
-        if (modalOverlay) {
-            modalOverlay.style.display = 'none';
-        }
-        receitaIdParaExcluir = null;
-    }
+        const esconderModal = () => {
+            modal.style.display = 'none'; // Esconde o modal
+            receitaIdParaExcluir = null;
+        };
 
-    // Botão Cancelar
-    if (btnCancelar) {
         btnCancelar.addEventListener('click', esconderModal);
-    }
+        
+        // Clica no overlay para fechar (opcional)
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                esconderModal();
+            }
+        });
 
-    // Botão Confirmar (Submeter Formulário)
-    if (btnConfirmar) {
-        btnConfirmar.addEventListener('click', function() {
+        // Confirma e submete o formulário escondido
+        btnConfirmar.addEventListener('click', () => {
             if (receitaIdParaExcluir) {
-                // Encontra o formulário oculto pelo ID dinâmico
                 const form = document.getElementById(`form_excluir_${receitaIdParaExcluir}`);
                 if (form) {
-                    form.submit(); // Envia o POST de exclusão
-                } else {
-                    console.error('Formulário de exclusão não encontrado!');
+                    form.submit(); // Submete o formulário POST
                 }
             }
             esconderModal();
         });
     }
+
+    /* =========================================================================
+     * 3. Lógica do Botão Favoritar (NOVA)
+     * ========================================================================= */
+    const btnFavoritar = document.getElementById('btn_favoritar');
     
-    // Fechar ao clicar fora
-    if (modalOverlay) {
-        modalOverlay.addEventListener('click', function(e) {
-            if (e.target === modalOverlay) {
-                esconderModal();
+    // Verifica se o botão e as variáveis globais do Django existem (usuário logado)
+    if (btnFavoritar && typeof RECEITA_ID !== 'undefined') {
+        const iconeFavorito = document.getElementById('icone_favorito');
+        const textoFavorito = btnFavoritar.querySelector('.texto_favorito');
+
+        btnFavoritar.addEventListener('click', async () => {
+            
+            btnFavoritar.disabled = true; // Desabilita o botão
+            
+            // Determina se a receita está favoritada atualmente
+            const isFavoritado = btnFavoritar.classList.contains('favoritado');
+            
+            try {
+                // Requisição POST para o endpoint de favoritos
+                const response = await fetch(FAVORITAR_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': CSRF_TOKEN
+                    },
+                    // Opcional: enviar o estado atual no corpo da requisição
+                    body: JSON.stringify({
+                        receita_id: RECEITA_ID,
+                        action: isFavoritado ? 'desfavoritar' : 'favoritar'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro de rede ou servidor: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Atualiza a interface baseada no novo estado retornado
+                    const novoStatus = data.novo_status; 
+
+                    if (novoStatus === 'favoritado') {
+                        btnFavoritar.classList.add('favoritado');
+                        iconeFavorito.classList.remove('fa-heart-o');
+                        iconeFavorito.classList.add('fa-heart');
+                        textoFavorito.textContent = 'Desfavoritar';
+                        btnFavoritar.setAttribute('aria-label', 'Desfavoritar');
+                        btnFavoritar.setAttribute('title', 'Remover dos Favoritos');
+
+                    } else if (novoStatus === 'desfavoritado') {
+                        btnFavoritar.classList.remove('favoritado');
+                        iconeFavorito.classList.remove('fa-heart');
+                        iconeFavorito.classList.add('fa-heart-o');
+                        textoFavorito.textContent = 'Favoritar';
+                        btnFavoritar.setAttribute('aria-label', 'Favoritar');
+                        btnFavoritar.setAttribute('title', 'Adicionar aos Favoritos');
+                    }
+                } else {
+                    console.error('Falha na operação:', data.message || 'Ocorreu um erro.');
+                }
+
+            } catch (error) {
+                console.error('Erro ao processar a requisição de favoritos:', error);
+            } finally {
+                btnFavoritar.disabled = false; // Reabilita o botão
             }
         });
     }

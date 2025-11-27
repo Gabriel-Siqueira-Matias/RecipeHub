@@ -9,6 +9,17 @@
 {% block content %}
 <div id="sub_main">
     
+    <!-- Exibe as mensagens do Django -->
+    {% if messages %}
+        <div class="mensagens_alerta_container">
+            {% for message in messages %}
+                <div class="alerta alerta_{{ message.tags }}">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <!-- Bloco com as informações do usuario -->
     <div id="bloco_informacoes">
         <div id="dados">

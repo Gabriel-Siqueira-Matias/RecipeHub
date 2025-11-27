@@ -1,68 +1,84 @@
 :root {
-    /* Cores existentes */
-    --cor_fundo_tela: #FCF5E3; /* Bege/Quase Branco */
-    --cor_fundo_bloco_central: #6B3E2E; /* Marrom Escuro Principal */
+    --cor_fundo_tela: #FCF5E3;
+    --cor_fundo_bloco_central: #6B3E2E;
     --cor_texto_sobre: white;
-    --cor_detalhe_acento: #F8D5A3; /* Acabamento / Destaque (Bege Claro) */
-    --cor_detalhe_secundario: #A06C59; /* Segundo tom de marrom para fundo de blocos */
-    --cor_borda: rgba(255, 255, 255, 0.2);
-    --cor_input_fundo: #8C5C48; /* Tom intermediário mais escuro para o fundo dos inputs */
+    --cor_detalhe: #F8D5A3;
+    --cor_fundo_bloco_formulario: #A06C59;
+    --cor_input_borda: rgba(255, 255, 255, 0.2);
+    --cor_input_fundo: #8C5C48;
     --cor_input_texto: white;
-    --cor_erro: #dc3545; /* Vermelho */
+    --cor_erro: #dc3545;
+    --cor_titulo: #F8D5A3;
+    --cor_texto_bloco: #F8D5A3;
+    --sucesso: #155724;
 }
 
 body {
-  background-color: var(--cor_fundo_tela);
+    background-color: var(--cor_fundo_tela);
+    overflow-x: hidden;
 }
 
-/* Container Principal - Mantém a estética centralizada e escura */
-#sub_main_criar {
-    width: 99%;
-    max-width: 900px;
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#sub_main {
+    width: 75%;
+    max-width: 896px;
+    min-height: 702px;
     display: flex;
     flex-direction: column;
-    margin: 20px auto;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--cor_detalhe_secundario);
+    align-items: center;
+    margin: 10px auto;
+    box-shadow: 12px 12px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid black;
     background-color: var(--cor_fundo_bloco_central);
     border-radius: 20px;
-    padding: 30px;
+}
+
+.bloco {
+    width: 93%;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 0;
+}
+
+.sobre {
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
     box-sizing: border-box;
     color: var(--cor_texto_sobre);
 }
 
-.header_criar {
-    padding-bottom: 20px;
-    border-bottom: 2px solid var(--cor_borda);
-    margin-bottom: 30px;
-    text-align: center; /* Centraliza o título */
-}
-
-.header_criar h1 {
-    font-family: 'Merriweather', serif;
-    font-size: 2.8em;
+.sobre h2 {
     margin: 0;
-    color: var(--cor_detalhe_acento);
+    font-family: 'Merriweather', serif;
+    padding-top: 10px;
+    font-size: xxx-large;
+    color: var(--cor_titulo);
 }
 
-.header_criar p {
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: 5px;
-    font-size: 1em;
+.itens {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
 }
 
-/* Bloco Geral do Formulário (Sessões) */
-.bloco_form {
-    /* Usa o tom secundário para os blocos internos */
-    background-color: var(--cor_detalhe_secundario); 
+.bloco_formulario {
+    background-color: var(--cor_fundo_bloco_formulario); 
     padding: 25px;
     border-radius: 12px;
     margin-bottom: 25px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.bloco_form h2 {
-    color: var(--cor_detalhe_acento);
+.bloco_formulario h2 {
+    color: var(--cor_titulo);
     font-family: 'Merriweather', serif;
     margin-top: 0;
     padding-bottom: 10px;
@@ -71,26 +87,24 @@ body {
     font-size: 1.6em;
 }
 
-/* Estilo dos Campos Comuns */
-.form_campo {
+.campo_formulario {
     margin-bottom: 15px;
     display: flex;
     flex-direction: column;
 }
 
-.form_campo label {
+.campo_formulario label {
     font-weight: bold;
     margin-bottom: 5px;
-    color: var(--cor_texto_sobre);
+    color: var(--cor_texto_bloco);
     font-size: 0.95em;
 }
 
-/* Estilo para todos os inputs de texto, número, select e textarea */
-.form_campo input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):not([type="submit"]),
-.form_campo select, 
-.form_campo textarea {
+.campo_formulario input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):not([type="submit"]),
+.campo_formulario select, 
+.campo_formulario textarea {
     background-color: var(--cor_input_fundo);
-    border: 1px solid var(--cor_borda);
+    border: 1px solid var(--cor_input_borda);
     color: var(--cor_input_texto);
     padding: 10px 12px;
     border-radius: 8px;
@@ -100,29 +114,27 @@ body {
     box-sizing: border-box;
 }
 
-.form_campo input:focus, .form_campo select:focus, .form_campo textarea:focus {
-    border-color: var(--cor_detalhe_acento);
+.campo_formulario input:focus, .campo_formulario select:focus, .campo_formulario textarea:focus {
+    border-color: var(--cor_detalhe);
     outline: none;
-    box-shadow: 0 0 5px var(--cor_detalhe_acento);
+    box-shadow: 0 0 5px var(--cor_detalhe);
 }
 
-/* Campos em Linha (Porções, Tempo, Estado) */
-.campos_inline {
+.campos_formularios_inline {
     display: flex;
     gap: 20px;
 }
 
-.campos_inline .form_campo {
+.campos_formularios_inline .campo_formulario {
     flex: 1;
 }
 
-/* Estilo para Radio e Checkbox M2M */
-.checkbox_group label {
+.checkbox_elemento label {
     margin-bottom: 10px;
     display: block;
 }
 
-.radio_options, .checkbox_options {
+.opcoes_radio, .opcoes_checkbox {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
@@ -132,7 +144,7 @@ body {
     background-color: var(--cor_input_fundo);
 }
 
-.radio_options label, .checkbox_options label {
+.opcoes_radio label, .opcoes_checkbox label {
     font-weight: normal;
     display: flex;
     align-items: center;
@@ -140,25 +152,24 @@ body {
     margin: 0;
     padding: 5px 10px;
     border-radius: 6px;
-    /* Usa a cor de destaque para indicar seleção */
 }
 
-.radio_options input[type="radio"], .checkbox_options input[type="checkbox"] {
+.opcoes_radio input[type="radio"], .opcoes_checkbox input[type="checkbox"] {
     margin-right: 8px;
-    accent-color: var(--cor_detalhe_acento);
+    accent-color: var(--cor_detalhe);
     width: 16px;
     height: 16px;
 }
 
 /* Estilo de erro */
-.form_erro {
+.erro_formulario {
     color: var(--cor_erro);
     font-size: 0.85em;
     margin-top: 5px;
     padding: 5px 0;
 }
 
-.form_global_erro {
+.erros_formulario {
     border: 1px solid var(--cor_erro);
     padding: 10px;
     border-radius: 8px;
@@ -166,17 +177,16 @@ body {
     background-color: rgba(220, 53, 69, 0.15);
 }
 
-/* --- Formsets (Ingredientes, Etapas, Mídias) --- */
 .dica {
-    color: var(--cor_detalhe_acento);
+    color: var(--cor_detalhe);
     font-style: italic;
     margin-bottom: 15px;
     font-size: 0.9em;
 }
 
-.form_row {
+.formulario_row {
     display: flex;
-    align-items: center; /* Alinha os itens verticalmente ao centro */
+    align-items: center;
     gap: 10px;
     padding: 10px 15px;
     margin-bottom: 10px;
@@ -186,62 +196,84 @@ body {
     transition: background-color 0.3s;
 }
 
-.form_row:hover {
-    background-color: #795252; /* Um tom mais escuro no hover para indicar interação */
+.formulario_row:hover {
+    background-color: #795252;
 }
 
-/* Esconde as labels dos formsets, já que o cabeçalho já as explica */
-.form_row .form_campo label {
+.formulario_row .campo_formulario label {
     display: none;
 }
 
-/* Remove a margem do campo_opcional dentro do form_row */
-.form_row .form_campo {
+.formulario_row .campo_formulario {
     margin-bottom: 0;
 }
 
-
-/* Colunas do Ingrediente */
-.ingrediente_form .campo_nome { flex: 4; }
-.ingrediente_form .campo_qtd { flex: 1; min-width: 60px; }
-.ingrediente_form .campo_unidade { flex: 2; min-width: 120px; }
-.ingrediente_form .campo_opcional { flex: 1; display: flex; align-items: center; justify-content: flex-end; }
-.ingrediente_form .campo_opcional label { margin-right: 5px; display: inline-block; font-weight: normal; } /* Mostra a label aqui */
-.ingrediente_form .campo_delete { flex: 0 0 30px; }
-
-
-/* Colunas da Etapa */
-.etapa_form { align-items: flex-start; } /* A etapa tem textarea, alinha no topo */
-.etapa_form .campo_conteudo { flex: 1; }
-.etapa_form .campo_delete { flex: 0 0 30px; margin-top: 10px; } /* Mantenha o botão no topo */
-
-/* Colunas da Mídia */
-.midia_form .campo_tipo { flex: 2; min-width: 120px; }
-.midia_form .campo_arquivo { flex: 3; }
-.midia_form .campo_delete { flex: 0 0 30px; }
-
-/* Estilo do Checkbox de Delete */
-.campo_delete {
-    align-self: center; /* Alinha o checkbox no centro */
+.ingrediente_formulario .nome_campo {
+    flex: 4; 
 }
-.campo_delete label {
-    display: none; /* Esconde a label "Deletar" */
+
+.ingrediente_formulario .qtd_campo {
+    flex: 1; min-width: 60px;
 }
-.campo_delete input[type="checkbox"] {
+
+.ingrediente_formulario .unidade_campo {
+    flex: 2; min-width: 120px;
+}
+
+.ingrediente_formulario .opcional {
+    flex: 1; display: flex; align-items: center; justify-content: flex-end;
+}
+
+.ingrediente_formulario .opcional label {
+    margin-right: 5px; display: inline-block; font-weight: normal;
+}
+
+.ingrediente_formulario .delete {
+    flex: 0 0 30px;
+}
+
+.etapa_formulario {
+    align-items: flex-start;
+}
+
+.etapa_formulario .conteudo_campo {
+    flex: 1;
+}
+.etapa_formulario .delete {
+    flex: 0 0 30px; margin-top: 10px;
+}
+
+.midia_formulario .tipo_campo {
+    flex: 2; min-width: 120px;
+}
+
+.midia_formulario .arquivo_campo {
+    flex: 3;
+}
+
+.midia_formulario .delete {
+    flex: 0 0 30px;
+}
+
+.delete {
+    align-self: center;
+}
+.delete label {
+    display: none;
+}
+.delete input[type="checkbox"] {
     accent-color: var(--cor_erro);
     width: 20px;
     height: 20px;
     cursor: pointer;
 }
 
-
-/* Botão de Adicionar Formset */
-.btn_add_formset {
+.botao_adicionar {
     background-color: var(--cor_fundo_bloco_central);
-    color: var(--cor_detalhe_acento);
+    color: var(--cor_detalhe);
     padding: 10px 20px;
     border-radius: 8px;
-    border: 1px solid var(--cor_detalhe_acento);
+    border: 1px solid var(--cor_detalhe);
     cursor: pointer;
     font-weight: bold;
     margin-top: 15px;
@@ -249,17 +281,17 @@ body {
     font-size: 1em;
 }
 
-.btn_add_formset:hover {
-    background-color: var(--cor_detalhe_acento);
+.botao_adicionar:hover {
+    background-color: var(--cor_detalhe);
     color: var(--cor_fundo_bloco_central);
 }
 
 /* Botão de Submissão Principal */
-.btn_submit_receita {
+.botao_salvar {
     display: block;
     width: 100%;
     padding: 18px;
-    background-color: var(--cor_detalhe_acento);
+    background-color: var(--cor_detalhe);
     color: var(--cor_fundo_bloco_central);
     border: none;
     border-radius: 12px;
@@ -271,55 +303,58 @@ body {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
-.btn_submit_receita:hover {
+.botao_salvar:hover {
     background-color: #FCF5E3; /* Cor mais clara do background da tela */
 }
 
-/* Responsividade para telas menores */
-@media (max-width: 768px) {
-    .header_criar h1 {
-        font-size: 2em;
-    }
-    
-    .campos_inline {
-        flex-direction: column;
-        gap: 0;
-    }
+.mensagens_container {
+    max-width: 900px; /* Ajuste conforme a largura do seu layout */
+    margin: 20px auto;
+    padding: 0 10px;
+}
 
-    .form_row {
-        flex-direction: column;
-        align-items: stretch; /* Estica os campos na coluna */
-        gap: 5px;
-        padding: 15px 10px;
-    }
+.mensagem {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-weight: bold;
+    opacity: 0.95;
+    transition: opacity 0.3s ease;
+}
 
-    /* Colunas dos formsets agora ocupam 100% */
-    .ingrediente_form .campo_nome,
-    .ingrediente_form .campo_qtd,
-    .ingrediente_form .campo_unidade,
-    .etapa_form .campo_conteudo,
-    .midia_form .campo_tipo,
-    .midia_form .campo_arquivo {
-        flex: 1 1 100%;
-        width: 100%;
-    }
-    
-    /* Reajusta o layout da opção opcional para mobile */
-    .ingrediente_form .campo_opcional { 
-        justify-content: flex-start; 
-        flex: 1 1 100%;
-        padding-top: 5px;
-        border-top: 1px dotted var(--cor_borda);
-    }
-    .ingrediente_form .campo_delete,
-    .etapa_form .campo_delete,
-    .midia_form .campo_delete {
-        align-self: flex-start;
-        margin-top: 5px;
-    }
+/* Estilo para Mensagens de Sucesso (messages.success) */
+.mensagem.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
 
-    /* Reajusta a exibição da label do campo opcional */
-    .ingrediente_form .campo_opcional label {
-        display: inline-block; /* Garante que a label "Opcional" apareça */
-    }
+/* Estilo para Mensagens de Erro (messages.error) */
+.mensagem.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para Mensagens de Alerta (messages.warning) */
+.mensagem.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-color: #ffeeba;
+}
+
+.erro_formulario {
+    color: #721c24; /* Cor de erro semelhante ao do bloco de mensagem */
+    background-color: #f8d7da;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+
+.erros_formulario {
+    margin-top: 15px;
+    border: 1px solid #f5c6cb;
 }

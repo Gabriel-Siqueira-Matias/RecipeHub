@@ -2,205 +2,211 @@
 {% load static %}
 
 {% block title %}{{ titulo_pagina }}{% endblock %}
-
 {% block extra_css %}
-    <!-- Garante que o CSS de criação seja carregado -->
-    <link rel="stylesheet" href="{% static 'css/receitas/criar.css' %}">
+<link rel="stylesheet" href="{% static 'css/receitas/criar.css' %}" />
 {% endblock %}
 
 {% block content %}
-<div id="sub_main_criar">
-    <div class="header_criar">
-        <h1>Criar Nova Receita</h1>
-        <p>Preencha os detalhes da sua criação culinária. Seu perfil será automaticamente associado como autor.</p>
+<div id="sub_main">
+    
+    <!-- Exibe as mensagens do Django -->
+    {% if messages %}
+        <div class="mensagens_container">
+            {% for message in messages %}
+                <div class="mensagem {{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Bloco do formulario -->
+    <div class="bloco">
+
+        <!-- sobre o bloco -->
+        <div class="sobre">
+            <h2>{{ titulo_pagina }}</h2>
+            <p>Preencha os detalhes da sua criação culinária. Seu perfil será automaticamente associado como autor.</p>
+            <hr>
+        </div>
+
+        <!-- Espaço dos inputs -->
+        <div class="itens">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- bloco formulario receita -->
+                <div class="bloco_formulario">
+                    <h2>1. Informações Essenciais</h2>
+                    <div class="campo_formulario">
+                        {{ receita_formulario.nome.label_tag }}
+                        {{ receita_formulario.nome }}
+                        {% if receita_formulario.nome.errors %}
+                            <div class="erro_formulario">{{ receita_formulario.nome.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="campos_formularios_inline">
+                        <div class="campo_formulario">
+                            {{ receita_formulario.porcoes.label_tag }}
+                            {{ receita_formulario.porcoes }}
+                        </div>
+                        <div class="campo_formulario">
+                            {{ receita_formulario.tempo_preparo.label_tag }}
+                            {{ receita_formulario.tempo_preparo }}
+                        </div>
+                        <div class="campo_formulario">
+                            {{ receita_formulario.estado.label_tag }}
+                            {{ receita_formulario.estado }}
+                        </div>
+                    </div>
+                    <div class="campo_formulario checkbox_elemento">
+                        {{ receita_formulario.tipo.label_tag }}
+                        <div class="opcoes_radio">{{ receita_formulario.tipo }}</div>
+                    </div>
+                    <div class="campos_formularios_inline campos_varios_para_varios">
+                        <div class="campo_formulario checkbox_elemento">
+                            {{ receita_formulario.categorias.label_tag }}
+                            <div class="opcoes_checkbox">{{ receita_formulario.categorias }}</div>
+                        </div>
+                        <div class="campo_formulario checkbox_elemento">
+                            {{ receita_formulario.metodos.label_tag }}
+                            <div class="opcoes_checkbox">{{ receita_formulario.metodos }}</div>
+                        </div>
+                    </div>
+                    {% if receita_formulario.non_field_errors %}
+                        <div class="erro_formulario erros_formulario">{{ receita_formulario.non_field_errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- bloco formulario ingredientes -->
+                <div class="bloco_formulario container_formset">
+                    <h2>2. Ingredientes</h2>
+                    <p class="dica">Adicione os ingredientes. Marque a caixa no final para remover um item.</p>
+                    {{ ingredientes_formset.management_form }}
+                    <div id="lista_ingredientes_formulario">
+                        {% for form in ingredientes_formset %}
+                            <div class="ingrediente_formulario formulario_row">
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                                <div class="campo_formulario nome_campo">{{ form.nome.label_tag }} {{ form.nome }}</div>
+                                <div class="campo_formulario qtd_campo">{{ form.quantidade.label_tag }} {{ form.quantidade }}</div>
+                                <div class="campo_formulario unidade_campo">{{ form.unidade.label_tag }} {{ form.unidade }}</div>
+                                <div class="opcional">{{ form.opcional.label_tag }} {{ form.opcional }}</div>
+                                <div class="delete">{{ form.DELETE }}</div>
+                                {% if form.non_field_errors %}
+                                    <div class="erro_formulario erro_formulario_row">{{ form.non_field_errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- template de ingrediente -->
+                    <template id="ingredientes_formulario_template">
+                        <div class="ingrediente_formulario formulario_row">
+                            {% for hidden in ingredientes_formset.empty_form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                            <div class="campo_formulario nome_campo">{{ ingredientes_formset.empty_form.nome.label_tag }} {{ ingredientes_formset.empty_form.nome }}</div>
+                            <div class="campo_formulario qtd_campo">{{ ingredientes_formset.empty_form.quantidade.label_tag }} {{ ingredientes_formset.empty_form.quantidade }}</div>
+                            <div class="campo_formulario unidade_campo">{{ ingredientes_formset.empty_form.unidade.label_tag }} {{ ingredientes_formset.empty_form.unidade }}</div>
+                            <div class="opcional">{{ ingredientes_formset.empty_form.opcional.label_tag }} {{ ingredientes_formset.empty_form.opcional }}</div>
+                            <div class="delete">{{ ingredientes_formset.empty_form.DELETE }}</div>
+                        </div>
+                    </template>
+                    <button type="button" class="botao_adicionar" data-formset-id="ingredientes">Adicionar Ingrediente</button>
+                    {% if ingredientes_formset.non_form_errors %}
+                        <div class="erro_formulario erros_formulario">{{ ingredientes_formset.non_form_errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- bloco formulario etapas -->
+                <div class="bloco_formulario container_formset">
+                    <h2>3. Modo de Preparo (Etapas)</h2>
+                    <p class="dica">Descreva o passo a passo da receita.</p>
+                    {{ etapas_formset.management_form }}
+                    <div id="lista_etapas_formulario">
+                        {% for form in etapas_formset %}
+                            <div class="etapa_formulario formulario_row">
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                                <div class="campo_formulario conteudo_campo">{{ form.conteudo.label_tag }} {{ form.conteudo }}</div>
+                                <div class="delete">{{ form.DELETE }}</div>
+                                {% if form.non_field_errors %}
+                                    <div class="erro_formulario erro_formulario_row">{{ form.non_field_errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- template de etapa -->
+                    <template id="etapas_formulario_template">
+                        <div class="etapa_formulario formulario_row">
+                            {% for hidden in etapas_formset.empty_form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                            <div class="campo_formulario conteudo_campo">
+                                {{ etapas_formset.empty_form.conteudo.label_tag }} 
+                                {{ etapas_formset.empty_form.conteudo }}
+                            </div>
+                            <div class="delete">{{ etapas_formset.empty_form.DELETE }}</div>
+                        </div>
+                    </template>
+                    <button type="button" class="botao_adicionar" data-formset-id="etapas">Adicionar Etapa</button>
+                    {% if etapas_formset.non_form_errors %}
+                        <div class="erro_formulario erros_formulario">{{ etapas_formset.non_form_errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- bloco formulario midias -->
+                <div class="bloco_formulario container_formset">
+                    <h2>4. Mídia (Imagens/Vídeos)</h2>
+                    <p class="dica">Adicione o arquivo e selecione se é uma Imagem ou Vídeo.</p>
+                    {{ midias_formset.management_form }}
+                    <div id="lista_midias_formulario">
+                        {% for form in midias_formset %}
+                            <div class="midia_formulario formulario_row">
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                                <div class="campo_formulario tipo_campo">{{ form.tipo.label_tag }} {{ form.tipo }}</div>
+                                <div class="campo_formulario arquivo_campo">{{ form.arquivo.label_tag }} {{ form.arquivo }}</div>
+                                <div class="delete">{{ form.DELETE }}</div>
+                                {% if form.non_field_errors %}
+                                    <div class="erro_formulario erro_formulario_row">{{ form.non_field_errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- template de midia -->
+                    <template id="midias_formulario_template">
+                        <div class="midia_formulario formulario_row">
+                            {% for hidden in midias_formset.empty_form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                            <div class="campo_formulario tipo_campo">{{ midias_formset.empty_form.tipo.label_tag }} {{ midias_formset.empty_form.tipo }}</div>
+                            <div class="campo_formulario arquivo_campo">
+                                {{ midias_formset.empty_form.arquivo.label_tag }} 
+                                {{ midias_formset.empty_form.arquivo }}
+                            </div>
+                            <div class="delete">{{ midias_formset.empty_form.DELETE }}</div>
+                        </div>
+                    </template>
+                    <button type="button" class="botao_adicionar" data-formset-id="midias">Adicionar Mídia</button>
+                    {% if midias_formset.non_form_errors %}
+                        <div class="erro_formulario erros_formulario">{{ midias_formset.non_form_errors }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="botao_salvar">Salvar Receita</button>
+            </form>
+        </div>
     </div>
-
-    <!-- O formulário precisa do atributo enctype="multipart/form-data" para lidar com upload de Mídias (arquivos/imagens) -->
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        <!-- Bloco de Informações Básicas -->
-        <div class="bloco_form">
-            <h2>1. Informações Essenciais</h2>
-            <div class="form_campo">
-                {{ receita_form.nome.label_tag }}
-                {{ receita_form.nome }}
-                {% if receita_form.nome.errors %}<div class="form_erro">{{ receita_form.nome.errors }}</div>{% endif %}
-            </div>
-            
-            <div class="campos_inline">
-                <div class="form_campo">
-                    {{ receita_form.porcoes.label_tag }}
-                    {{ receita_form.porcoes }}
-                </div>
-                <div class="form_campo">
-                    {{ receita_form.tempo_preparo.label_tag }}
-                    {{ receita_form.tempo_preparo }}
-                </div>
-                <div class="form_campo">
-                    {{ receita_form.estado.label_tag }}
-                    {{ receita_form.estado }}
-                </div>
-            </div>
-            
-            <div class="form_campo checkbox_group">
-                {{ receita_form.tipo.label_tag }}
-                <div class="radio_options">{{ receita_form.tipo }}</div>
-            </div>
-
-            <!-- M2M - Categorias e Métodos (CheckboxSelectMultiple) -->
-            <div class="campos_inline campos_m2m">
-                <div class="form_campo checkbox_group">
-                    {{ receita_form.categorias.label_tag }}
-                    <div class="checkbox_options">{{ receita_form.categorias }}</div>
-                </div>
-                <div class="form_campo checkbox_group">
-                    {{ receita_form.metodos.label_tag }}
-                    <div class="checkbox_options">{{ receita_form.metodos }}</div>
-                </div>
-            </div>
-
-            <!-- Exibir erros gerais do form principal, se houver -->
-            {% if receita_form.non_field_errors %}
-                <div class="form_erro form_global_erro">{{ receita_form.non_field_errors }}</div>
-            {% endif %}
-        </div>
-        
-        <!-- Bloco de Ingredientes (Formset) -->
-        <div class="bloco_form formset_container">
-            <h2>2. Ingredientes</h2>
-            <p class="dica">Adicione os ingredientes. Marque a caixa no final para remover um item.</p>
-            {{ ingredientes_formset.management_form }}
-            
-            <div id="ingredientes-form-list">
-                <!-- Linhas de Ingredientes Existentes -->
-                {% for form in ingredientes_formset %}
-                    <div class="ingrediente_form form_row">
-                        {% for hidden in form.hidden_fields %}
-                            {{ hidden }}
-                        {% endfor %}
-
-                        <div class="form_campo campo_nome">{{ form.nome.label_tag }} {{ form.nome }}</div>
-                        <div class="form_campo campo_qtd">{{ form.quantidade.label_tag }} {{ form.quantidade }}</div>
-                        <div class="form_campo campo_unidade">{{ form.unidade.label_tag }} {{ form.unidade }}</div>
-                        <div class="campo_opcional">{{ form.opcional.label_tag }} {{ form.opcional }}</div>
-                        <div class="campo_delete">{{ form.DELETE }}</div>
-                        
-                        {% if form.non_field_errors %}
-                            <div class="form_erro form_row_erro">{{ form.non_field_errors }}</div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-            
-            <!-- TEMPLATE VAZIO USANDO <template> (NOVO) -->
-            <template id="ingredientes-empty-form-template">
-                <div class="ingrediente_form form_row">
-                    {% for hidden in ingredientes_formset.empty_form.hidden_fields %}
-                        {{ hidden }}
-                    {% endfor %}
-                    <div class="form_campo campo_nome">{{ ingredientes_formset.empty_form.nome.label_tag }} {{ ingredientes_formset.empty_form.nome }}</div>
-                    <div class="form_campo campo_qtd">{{ ingredientes_formset.empty_form.quantidade.label_tag }} {{ ingredientes_formset.empty_form.quantidade }}</div>
-                    <div class="form_campo campo_unidade">{{ ingredientes_formset.empty_form.unidade.label_tag }} {{ ingredientes_formset.empty_form.unidade }}</div>
-                    <div class="campo_opcional">{{ ingredientes_formset.empty_form.opcional.label_tag }} {{ ingredientes_formset.empty_form.opcional }}</div>
-                    <div class="campo_delete">{{ ingredientes_formset.empty_form.DELETE }}</div>
-                </div>
-            </template>
-
-            <button type="button" class="btn_add_formset" data-formset-id="ingredientes">Adicionar Ingrediente</button>
-            {% if ingredientes_formset.non_form_errors %}
-                <div class="form_erro form_global_erro">{{ ingredientes_formset.non_form_errors }}</div>
-            {% endif %}
-        </div>
-        
-        <!-- Bloco de Etapas de Preparo (Formset) -->
-        <div class="bloco_form formset_container">
-            <h2>3. Modo de Preparo (Etapas)</h2>
-            <p class="dica">Descreva o passo a passo da receita.</p>
-            {{ etapas_formset.management_form }}
-            
-            <div id="etapas-form-list">
-                <!-- Linhas de Etapas Existentes -->
-                {% for form in etapas_formset %}
-                    <div class="etapa_form form_row">
-                        {% for hidden in form.hidden_fields %}
-                            {{ hidden }}
-                        {% endfor %}
-
-                        <div class="form_campo campo_conteudo">{{ form.conteudo.label_tag }} {{ form.conteudo }}</div>
-                        <div class="campo_delete">{{ form.DELETE }}</div>
-                        
-                        {% if form.non_field_errors %}
-                            <div class="form_erro form_row_erro">{{ form.non_field_errors }}</div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-            
-            <!-- TEMPLATE VAZIO USANDO <template> (NOVO) -->
-            <template id="etapas-empty-form-template">
-                <div class="etapa_form form_row">
-                    {% for hidden in etapas_formset.empty_form.hidden_fields %}
-                        {{ hidden }}
-                    {% endfor %}
-                    <div class="form_campo campo_conteudo">{{ etapas_formset.empty_form.conteudo }}</div>
-                    <div class="campo_delete">{{ etapas_formset.empty_form.DELETE }}</div>
-                </div>
-            </template>
-
-            <button type="button" class="btn_add_formset" data-formset-id="etapas">Adicionar Etapa</button>
-            {% if etapas_formset.non_form_errors %}
-                <div class="form_erro form_global_erro">{{ etapas_formset.non_form_errors }}</div>
-            {% endif %}
-        </div>
-
-        <!-- Bloco de Mídias (Formset) -->
-        <div class="bloco_form formset_container">
-            <h2>4. Mídia (Imagens/Vídeos)</h2>
-            <p class="dica">Adicione o arquivo e selecione se é uma Imagem ou Vídeo.</p>
-            {{ midias_formset.management_form }}
-            
-            <div id="midias-form-list">
-                <!-- Linhas de Mídias Existentes -->
-                {% for form in midias_formset %}
-                    <div class="midia_form form_row">
-                        {% for hidden in form.hidden_fields %}
-                            {{ hidden }}
-                        {% endfor %}
-
-                        <div class="form_campo campo_tipo">{{ form.tipo.label_tag }} {{ form.tipo }}</div>
-                        <div class="form_campo campo_arquivo">{{ form.arquivo.label_tag }} {{ form.arquivo }}</div>
-                        <div class="campo_delete">{{ form.DELETE }}</div>
-                        
-                        {% if form.non_field_errors %}
-                            <div class="form_erro form_row_erro">{{ form.non_field_errors }}</div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-            
-            <!-- TEMPLATE VAZIO USANDO <template> (NOVO) -->
-            <template id="midias-empty-form-template">
-                <div class="midia_form form_row">
-                    {% for hidden in midias_formset.empty_form.hidden_fields %}
-                        {{ hidden }}
-                    {% endfor %}
-                    <div class="form_campo campo_tipo">{{ midias_formset.empty_form.tipo }}</div>
-                    <div class="form_campo campo_arquivo">{{ midias_formset.empty_form.arquivo }}</div>
-                    <div class="campo_delete">{{ midias_formset.empty_form.DELETE }}</div>
-                </div>
-            </template>
-
-            <button type="button" class="btn_add_formset" data-formset-id="midias">Adicionar Mídia</button>
-            {% if midias_formset.non_form_errors %}
-                <div class="form_erro form_global_erro">{{ midias_formset.non_form_errors }}</div>
-            {% endif %}
-        </div>
-
-        <button type="submit" class="btn_submit_receita">Salvar Receita</button>
-    </form>
 </div>
+{% endblock %}
 
-<!-- Importa o JavaScript dinâmico no final do body -->
+{% block extra_js %}
 <script src="{% static 'js/receitas/criar.js' %}"></script>
 {% endblock %}
