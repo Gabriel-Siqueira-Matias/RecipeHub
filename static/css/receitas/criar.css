@@ -13,6 +13,10 @@
     --sucesso: #155724;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     background-color: var(--cor_fundo_tela);
     overflow-x: hidden;
@@ -161,7 +165,6 @@ main {
     height: 16px;
 }
 
-/* Estilo de erro */
 .erro_formulario {
     color: var(--cor_erro);
     font-size: 0.85em;
@@ -286,7 +289,6 @@ main {
     color: var(--cor_fundo_bloco_central);
 }
 
-/* Botão de Submissão Principal */
 .botao_salvar {
     display: block;
     width: 100%;
@@ -304,11 +306,11 @@ main {
 }
 
 .botao_salvar:hover {
-    background-color: #FCF5E3; /* Cor mais clara do background da tela */
+    background-color: #FCF5E3;
 }
 
 .mensagens_container {
-    max-width: 900px; /* Ajuste conforme a largura do seu layout */
+    max-width: 900px;
     margin: 20px auto;
     padding: 0 10px;
 }
@@ -323,14 +325,12 @@ main {
     transition: opacity 0.3s ease;
 }
 
-/* Estilo para Mensagens de Sucesso (messages.success) */
 .mensagem.success {
     background-color: #d4edda;
     color: #155724;
     border-color: #c3e6cb;
 }
 
-/* Estilo para Mensagens de Erro (messages.error) */
 .mensagem.error {
     background-color: #f8d7da;
     color: #721c24;
@@ -338,7 +338,6 @@ main {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilo para Mensagens de Alerta (messages.warning) */
 .mensagem.warning {
     background-color: #fff3cd;
     color: #856404;
@@ -346,7 +345,7 @@ main {
 }
 
 .erro_formulario {
-    color: #721c24; /* Cor de erro semelhante ao do bloco de mensagem */
+    color: #721c24;
     background-color: #f8d7da;
     border-radius: 4px;
     padding: 5px 10px;
@@ -357,4 +356,9 @@ main {
 .erros_formulario {
     margin-top: 15px;
     border: 1px solid #f5c6cb;
+}
+
+.itens form {
+    width: 100%;
+    max-width: 100%;
 }

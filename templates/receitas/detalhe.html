@@ -10,7 +10,6 @@
 
 {% block content %}
 <div id="sub_main_detalhe">
-
     <!-- Exibe as mensagens do Django -->
     {% if messages %}
         <div class="mensagens_container">
@@ -21,18 +20,13 @@
             {% endfor %}
         </div>
     {% endif %}
-    
     <div class="header_detalhe">
-
         <div class="titulo_e_acoes">
-
             <!-- Título -->
             <h1 class="titulo_receita">{{ receita.nome }}</h1>
-            
-            <!-- Botões de ação -->
+            <!-- Botões -->
             <div class="botoes_acao_header">
-
-                <!-- Botão de Favoritar -->
+                <!-- Botão de favoritar -->
                 {% if user.is_authenticated and not dono %}
                     <a href="{% url 'receitas:favoritar_receita' receita.id %}" class="btn_acao botao_favorito">
                         {% if favoritado %}
@@ -42,20 +36,16 @@
                         {% endif %}
                     </a>
                 {% endif %}
-
                 {% if dono %}
-                    <!-- Botão Editar -->
+                    <!-- Botão de editar -->
                     <a href="{% url 'receitas:editar_receita' receita.id %}" class="btn_acao btn_editar">Editar</a>
-                    
-                    <!-- Botão Excluir: Formulário POST Escondido + Botão de Gatilho -->
+                    <!-- Botão de excluir -->
                     <form id="form_excluir_{{ receita.id }}" 
                         method="POST" 
                         action="{% url 'receitas:excluir_receita' receita.id %}" 
                         style="display: none;">
                         {% csrf_token %}
                     </form>
-                
-                <!-- Este botão chama a função JS para abrir o modal -->
                     <button type="button" 
                             onclick="mostrarConfirmacaoExclusao('{{ receita.id }}', '{{ receita.nome|escapejs }}')" 
                             class="btn_acao btn_excluir">
@@ -64,21 +54,16 @@
                 {% endif %}
             </div>
         </div>
-        
-        <!-- Nome e Autor (Mantido abaixo) -->
+        <!-- Sobre criação -->
         <p class="autor_info">
             Por <a href="{% url 'usuarios:perfil' username=receita.autor.user.username %}">{{ receita.autor.user.username }}</a>
             | Criado em: {{ receita.criado_em|date:"d/m/Y" }}
             | Favoritada: {{ receita.usuarios_favorito.count }} vez(es)
         </p>
-        
     </div>
-
     <div class="conteudo_principal">
-        <!-- 1. Bloco de Mídia (Carrossel) e Informações Gerais -->
         <div class="bloco_visao_geral">
-            
-            <!-- Carrossel de Mídia -->
+            <!-- Carrossel de midia -->
             <div id="carrossel_midia" class="carrossel">
                 <div class="carrossel_conteudo">
                     {% for midia in receita.midias.all %}
@@ -97,22 +82,19 @@
                         </div>
                     {% endfor %}
                 </div>
-                <!-- Controles de Navegação (Se houver mais de 1 mídia) -->
                 {% if receita.midias.count > 1 %}
                     <button class="prev_btn">&lt;</button>
                     <button class="next_btn">&gt;</button>
                     <div class="pontos_navegacao"></div>
                 {% endif %}
             </div>
-            
-            <!-- Informações Essenciais -->
+            <!-- Informações essenciais -->
             <div class="informacoes_basicas">
                 <h2>Detalhes</h2>
                 <p><strong>Porções:</strong> {{ receita.porcoes }}</p>
                 <p><strong>Tempo de Preparo:</strong> {{ receita.tempo_preparo }} min</p>
                 <p><strong>Tipo:</strong> <span class="tag_tipo">{{ receita.get_tipo_display }}</span></p>
-
-                <!-- Tags de Categorias e Métodos -->
+                <!-- Bloco categorias e metodos -->
                 <div class="tags_container">
                     {% if receita.categorias.all %}
                     <div class="tag_group">
@@ -124,7 +106,6 @@
                         </div>
                     </div>
                     {% endif %}
-
                     {% if receita.metodos.all %}
                     <div class="tag_group">
                         <p class="tag_titulo">Métodos</p>
@@ -138,9 +119,8 @@
                 </div>
             </div>
         </div>
-
-        <!-- 2. Bloco de Ingredientes e Instruções de Preparo -->
         <div class="bloco_detalhado">
+            <!--  Bloco de ingredientes -->
             <div class="secao ingredientes">
                 <h2>Ingredientes</h2>
                 <ul>
@@ -159,7 +139,6 @@
                     {% endfor %}
                 </ul>
             </div>
-            
             <div class="secao preparo">
                 <h2>Modo de Preparo</h2>
                 <ol>
@@ -177,8 +156,8 @@
             </div>
         </div>
     </div>
-    
-    <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO (NOVO: Adicionado ao final) -->
+
+    <!-- Modal de excluir -->
     {% if dono %}
     <div id="modal_confirmacao_exclusao" class="modal_overlay" style="display: none;">
         <div class="modal_conteudo">
@@ -186,16 +165,13 @@
             <p>Tem certeza de que deseja excluir permanentemente a receita: 
                <br>"<strong id="receita_nome_modal"></strong>"?</p>
             <p class="aviso_irreversivel">Esta ação não pode ser desfeita.</p>
-            
             <div class="modal_botoes">
                 <button id="btn_cancelar_exclusao" class="btn_acao btn_cancelar">Cancelar</button>
-                <!-- Este botão aciona o envio do formulário via JS -->
                 <button id="btn_confirmar_exclusao" class="btn_acao btn_excluir">Sim, Excluir</button>
             </div>
         </div>
     </div>
     {% endif %}
-
 </div>
 {% endblock %}
 
