@@ -13,6 +13,8 @@
   </head>
 
   <body>
+
+    <!-- Navbar -->
     <header>
       <div id="sub_header">
         <a href="{% url 'home' %}">
@@ -22,9 +24,10 @@
           </div>
         </a>
         <div id="bloco_pesquisa">
-          <input type="text">
-          <button>Filtros</button>
-          <button>Pesquisar</button>
+            <form action="{% url 'receitas:pesquisar_receita' %}" method="get">
+                <input type="text" name="q" placeholder="Buscar receitas" value="{{ request.GET.q|default:'' }}">
+                <button type="submit">Pesquisar</button>
+            </form>
         </div>
         <div id="bloco_conta">
           {% if user.is_authenticated %}
@@ -40,10 +43,14 @@
         </div>
       </div>
     </header>
+
+    <!-- Corpo -->
     <main>
         {% block content %}
         {% endblock %}
     </main>
+
+    <!-- Footer -->
     <footer>
       <p>RecipeHub</p>
       <p>2025</p>

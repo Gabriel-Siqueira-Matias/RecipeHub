@@ -59,5 +59,18 @@ def lista_receitas_perfil(request, username):
         'receitas': receitas,
         'dono_perfil': dono_perfil,
         'dono': dono,
+        'modo_favoritos': False,
+    }
+    return render(request, 'usuarios/lista_perfil.html', context)
+
+def lista_favoritos_perfil(request, username):
+    dono_perfil = get_object_or_404(Perfil, user__username=username)
+    dono = request.user.is_authenticated and request.user == dono_perfil.user
+    receitas = dono_perfil.favoritos.all()
+    context = {
+        'receitas': receitas,
+        'dono_perfil': dono_perfil,
+        'dono': dono,
+        'modo_favoritos': True,
     }
     return render(request, 'usuarios/lista_perfil.html', context)

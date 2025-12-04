@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db import transaction 
+from django.db import transaction
+from django.db.models import Count, Q
 from .models import Receita
 from .forms import (
     Receita_Formulario, 
@@ -9,6 +10,53 @@ from .forms import (
     Etapa_FormSet,
     Midia_FormSet,
 )
+
+def home(request):
+    novas_receitas = Receita.objects.filter(estado="PUBLICO").prefetch_related('midias', 'categorias', 'metodos').order_by('-criado_em')[:5]
+    receitas_favoritas = Receita.objects.filter(estado="PUBLICO").annotate(numero_favoritos=Count('usuarios_favorito')).prefetch_related('midias', 'categorias', 'metodos').order_by('-numero_favoritos')[:5]
+    context = {
+        'novas_receitas': novas_receitas,
+        'receitas_favoritas': receitas_favoritas,
+    }
+    return render(request, 'home.html', context)
+
+def lista_receitas(request):
+    receitas = Receita.objects.filter(estado="PUBLICO").prefetch_related('midias', 'categorias', 'metodos').order_by('-criado_em')
+    return render(request, 'receitas/lista.html', {'receitas': receitas})
+
+def lista_favoritos(request):
+    receitas = Receita.objects.filter(estado="PUBLICO").annotate(numero_favoritos=Count('usuarios_favorito')).prefetch_related('midias', 'categorias', 'metodos').order_by('-numero_favoritos')
+    return render(request, 'receitas/lista.html', {'receitas': receitas})
+
+def detalhe_receita(request, receita_id):
+    receita = get_object_or_404(Receita, id=receita_id)
+    dono = request.user.is_authenticated and request.user == receita.autor.user
+    favoritado = False
+    if request.user.is_authenticated and hasattr(request.user, 'perfil'):
+        favoritado = request.user.perfil.favoritos.filter(id=receita_id).exists()
+    context = {
+        'dono': dono,
+        'receita': receita,
+        'favoritado': favoritado,
+    }
+    return render(request, 'receitas/detalhe.html', context)
+
+def pesquisar_receita(request):
+    query = request.GET.get('q')
+    receitas = Receita.objects.filter(estado="PUBLICO").prefetch_related('midias', 'categorias', 'metodos')
+    if query:
+        conditions = Q(nome__icontains=query) | \
+                     Q(autor__user__username__icontains=query) | \
+                     Q(categorias__nome__icontains=query) | \
+                     Q(metodos__nome__icontains=query) | \
+                     Q(tipo__icontains=query)
+        receitas = receitas.filter(conditions).distinct()
+    context = {
+        'receitas': receitas,
+        'query': query or '',
+        'total_resultados': receitas.count(),
+    }
+    return render(request, 'receitas/lista.html', context)
 
 @login_required(redirect_field_name='next', login_url='usuarios:login')
 def criar_receita(request):
@@ -114,23 +162,3 @@ def favoritar_receita(request, receita_id):
         perfil.favoritos.add(receita)
         messages.success(request, f'"{receita.nome}" adicionada aos seus favoritos!')
     return redirect('receitas:detalhe_receita', receita_id=receita_id)
-
-def home(request):
-    novas_receitas = Receita.objects.filter(estado="PUBLICO").prefetch_related('midias', 'categorias', 'metodos').order_by('-criado_em')[:5]
-    return render(request, 'home.html', {'novas_receitas': novas_receitas})
-
-def lista_receitas(request):
-    receitas = Receita.objects.filter(estado="PUBLICO").prefetch_related('midias', 'categorias', 'metodos').order_by('-criado_em')
-    return render(request, 'receitas/lista.html', {'receitas': receitas})
-
-def detalhe_receita(request, receita_id):
-    receita = get_object_or_404(Receita, id=receita_id)
-    dono = request.user.is_authenticated and request.user == receita.autor.user
-    favoritado = False
-    if request.user.is_authenticated and hasattr(request.user, 'perfil'):
-        favoritado = request.user.perfil.favoritos.filter(id=receita.pk).exists()
-    context = {
-        'dono': dono,
-        'receita': receita,
-    }
-    return render(request, 'receitas/detalhe.html', context)

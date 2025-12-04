@@ -11,16 +11,20 @@
     
     <!-- Bloco receitas mais populares -->
     <div class="bloco">
+
         <!-- sobre o bloco -->
         <div class="sobre">
-            <h2>Mais populares</h2>
+            <h2>Mais favoritadas</h2>
         </div>
+
         <!-- Espaço q fica os cards das receitas -->
         <div class="itens">
-            {% for receita in novas_receitas %}
+            {% for receita in receitas_favoritas %}
                 <a href="{% url 'receitas:detalhe_receita' receita.id%}">
+
                     <!-- Card da receita -->
                     <div class="item">
+
                         <!-- Imagem do card -->
                         <div class="imagem_receita">
                             {% with midia=receita.midias.first %}
@@ -31,6 +35,7 @@
                                 {% endif %}
                             {% endwith %}
                         </div>
+
                         <!-- Informações do card -->
                         <div class="informacao_receita">
                             <strong>{{ receita.nome }}</strong>
@@ -45,37 +50,46 @@
                                 <li>Duração: {{ receita.tempo_preparo }} minuto(s)</li>
                             </ul>
                         </div>
+
                     </div>
+
                 </a>
             {% endfor %}
+
             <!-- Card q leva para todas as receitas -->
-            <a href="{% url 'receitas:lista_receitas' %}">
+            <a href="{% url 'receitas:lista_favoritos' %}">
                 <div class="item">
                     <p>=></p>
                     <p>Ver mais</p>
                 </div>
             </a>
+
         </div>
     </div>
 
     <!-- Bloco receitas mais recentes -->
     <div class="bloco">
-        <!-- sobre o bloco -->
+
+        <!-- Sobre o bloco -->
         <div class="sobre">
             <h2>Mais recentes</h2>
         </div>
+        
         <!-- Espaço q fica os cards das receitas -->
         <div class="itens">
             {% for receita in novas_receitas %}
                 <a href="{% url 'receitas:detalhe_receita' receita.id %}">
+
                     <!-- Card da receita -->
                     <div class="item">
+
                         <!-- Imagem do card -->
                         <div class="imagem_receita">
                             {% with midia=receita.midias.first %}
                                 <img src="{{ midia.arquivo.url }}" alt="Imagem de {{receita.nome}}">
                             {% endwith %}
                         </div>
+
                         <!-- Informações do card -->
                         <div class="informacao_receita">
                             <strong>{{ receita.nome }}</strong>
@@ -90,9 +104,12 @@
                                 <li>Duração: {{ receita.tempo_preparo }} minuto(s)</li>
                             </ul>
                         </div>
+
                     </div>
+
                 </a>
             {% endfor %}
+
             <!-- Card q leva para todas as receitas -->
             <a href="{% url 'receitas:lista_receitas' %}">
                 <div class="item">
@@ -100,7 +117,9 @@
                     <p>Ver mais</p>
                 </div>
             </a>
+
         </div>
+
     </div>
 
 </div>

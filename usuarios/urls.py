@@ -11,4 +11,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('perfil/<str:username>/', views.perfil, name='perfil'),
     path('perfil/<str:username>/lista/', views.lista_receitas_perfil, name='lista_perfil'),
+    path('perfil/<str:username>/favoritos/', views.lista_favoritos_perfil, name='lista_favoritos_perfil'),
 ]

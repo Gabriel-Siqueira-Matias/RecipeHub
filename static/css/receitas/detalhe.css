@@ -1,4 +1,5 @@
 :root {
+
     /* Cores existentes */
     --cor_fundo_tela: #FCF5E3;
     --cor_fundo_bloco_central: #6B3E2E;
@@ -53,7 +54,7 @@ main {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    margin-bottom: 5px; 
+    margin-bottom: 5px;
 }
 
 .titulo_receita {
@@ -61,9 +62,9 @@ main {
     font-size: 2.8em;
     margin: 0;
     color: var(--cor_detalhe_acento);
-    word-break: break-word; 
-    flex-grow: 1; 
-    margin-right: 15px; 
+    word-break: break-word;
+    flex-grow: 1;
+    margin-right: 15px;
 }
 
 .autor_info {
@@ -86,7 +87,7 @@ main {
 .botoes_acao_header {
     display: flex;
     gap: 10px;
-    flex-shrink: 0; 
+    flex-shrink: 0;
     margin: 10px 0;
 }
 
@@ -100,17 +101,12 @@ main {
     font-size: 0.9em;
     cursor: pointer;
     border: none;
-    transition: background-color 0.2s, box-shadow 0.2s;
+    transition: background-color 0.2s;
     white-space: nowrap;
-    display: flex; /* Para alinhar o ícone de Favoritar */
-    align-items: center;
-    gap: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .btn_acao:hover {
     background-color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .btn_excluir {
@@ -121,34 +117,26 @@ main {
     background-color: #c82333;
 }
 
-/* --- ESTILIZAÇÃO ESPECÍFICA DO BOTÃO FAVORITAR --- */
-.btn_favorito {
-    background-color: transparent;
-    color: var(--cor_detalhe_acento);
-    border: 1px solid var(--cor_detalhe_acento);
-    box-shadow: none;
+/* Estilo Básico para o ícone (pode ser ajustado) */
+.botao_favorito .material-symbols-outlined {
+    font-size: 1.5em; /* Garante que o ícone seja visível */
+    line-height: 1;
+    transition: font-variation-settings 0.2s, color 0.2s;
 }
 
-.btn_favorito:hover {
-    background-color: rgba(248, 213, 163, 0.1); /* Um toque da cor acento */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+/* ⭐️ Ícone VAZIO (Padrão, FILL 0) */
+/* O Django atribui o ID "botao_nao_favoritado" ao ícone vazio */
+#botao_nao_favoritado {
+    /* FILL 0 = ícone vazado/outline */
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; 
+    color: var(--cor_fundo_bloco_central); /* Cor do ícone não favoritado */
 }
 
-/* Estado: Favoritado (Coração Preenchido) */
-.btn_favorito.favoritado {
-    background-color: var(--cor_detalhe_acento);
-    color: var(--cor_fundo_bloco_central);
-    border-color: var(--cor_detalhe_acento);
-}
-
-.btn_favorito.favoritado:hover {
-    background-color: #F8E2C9; /* Um pouco mais claro que o acento */
-    color: var(--cor_fundo_bloco_central);
-}
-
-/* Ícone de coração (para o ícone ser um pouco maior) */
-.btn_favorito i {
-    font-size: 1.1em;
+/* 💖 Ícone PREENCHIDO (Ativo, FILL 1) */
+/* O Django atribui o ID "botao_favoritado" ao ícone preenchido */
+#botao_favoritado {
+    /* FILL 1 = ícone preenchido/sólido */
+    font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24; 
 }
 
 .conteudo_principal {
@@ -190,7 +178,7 @@ main {
 }
 
 .carrossel_conteudo {
-    position: absolute; 
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -325,7 +313,7 @@ main {
 
 .tag_tipo, .tag_categoria, .tag_metodo {
     background-color: var(--cor_fundo_bloco_central);
-    color: white; 
+    color: white;
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 0.85em;
@@ -403,7 +391,6 @@ main {
     font-weight: bold;
     font-size: 1.1em;
     margin-right: 15px;
-    float: left;
 }
 
 .etapa_item p {
@@ -421,21 +408,26 @@ main {
         flex-direction: column;
         gap: 20px;
     }
+
     .bloco_visao_geral, .bloco_detalhado {
         min-width: 100%;
     }
+
     .titulo_receita {
         font-size: 2em;
         margin-right: 10px;
     }
+
     .titulo_e_acoes {
-        align-items: flex-start; 
+        align-items: flex-start;
     }
+
     .botoes_acao_header {
-        justify-content: flex-end; 
+        justify-content: flex-end;
     }
+
     .carrossel {
-        padding-bottom: 75%; 
+        padding-bottom: 75%;
     }
 }
 
@@ -493,6 +485,59 @@ main {
     color: white;
     border: none;
 }
+
 .btn_cancelar:hover {
     background-color: #8C5C48;
+}
+
+.mensagens_container {
+    max-width: 900px; /* Ajuste conforme a largura do seu layout */
+    margin: 20px auto;
+    padding: 0 10px;
+}
+
+.mensagem {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-weight: bold;
+    opacity: 0.95;
+    transition: opacity 0.3s ease;
+}
+
+/* Estilo para Mensagens de Sucesso (messages.success) */
+.mensagem.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+/* Estilo para Mensagens de Erro (messages.error) */
+.mensagem.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para Mensagens de Alerta (messages.warning) */
+.mensagem.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-color: #ffeeba;
+}
+
+.erro_formulario {
+    color: #721c24; /* Cor de erro semelhante ao do bloco de mensagem */
+    background-color: #f8d7da;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+
+.erros_formulario {
+    margin-top: 15px;
+    border: 1px solid #f5c6cb;
 }

@@ -75,9 +75,15 @@ header {
     align-items: center;
 }
 
+#bloco_pesquisa {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
 #bloco_pesquisa > * {
-    padding: 5px;
     border-radius: 10px;
+    gap: 5px;
 }
 
 #bloco_conta {
@@ -104,4 +110,9 @@ footer {
     line-height: 5px;
     padding: 5px 0 5px 0;
     height: 74px;
+}
+
+#bloco_pesquisa form button, form input{
+    padding: 5px;
+    border-radius: 10px;
 }

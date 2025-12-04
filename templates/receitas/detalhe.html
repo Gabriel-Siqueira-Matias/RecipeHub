@@ -5,38 +5,42 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/receitas/detalhe.css' %}" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 {% endblock %}
 
 {% block content %}
 <div id="sub_main_detalhe">
+
+    <!-- Exibe as mensagens do Django -->
+    {% if messages %}
+        <div class="mensagens_container">
+            {% for message in messages %}
+                <div class="mensagem {{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     
     <div class="header_detalhe">
-        
-        <!-- NOVO CONTAINER: Alinha Título e Botões em oposição -->
+
         <div class="titulo_e_acoes">
+
             <!-- Título -->
             <h1 class="titulo_receita">{{ receita.nome }}</h1>
             
-            <!-- Botões de Ação (Apenas para o dono, mas o favorito é para todos autenticados) -->
+            <!-- Botões de ação -->
             <div class="botoes_acao_header">
-                <!-- NOVO: Botão de Favoritar (para qualquer usuário logado) -->
+
+                <!-- Botão de Favoritar -->
                 {% if user.is_authenticated and not dono %}
-                <button 
-                    id="btn_favoritar" 
-                    data-receita-id="{{ receita.id }}" 
-                    class="btn_acao btn_favorito {% if favoritado %}favoritado{% endif %}"
-                    aria-label="{% if favoritado %}Desfavoritar{% else %}Favoritar{% endif %}"
-                    title="{% if favoritado %}Remover dos Favoritos{% else %}Adicionar aos Favoritos{% endif %}"
-                >
-                    <!-- Ícone que será alternado via JS -->
-                    <i class="fas {% if favoritado %}fa-heart{% else %}fa-heart-o{% endif %}" id="icone_favorito"></i>
-                    <span class="texto_favorito">{% if favoritado %}
-                        Desfavoritar
-                    {% else %}
-                        Favoritar
-                    {% endif %}</span>
-                </button>
+                    <a href="{% url 'receitas:favoritar_receita' receita.id %}" class="btn_acao botao_favorito">
+                        {% if favoritado %}
+                            <span id="botao_favoritado" class="material-symbols-outlined">star</span>
+                        {% else %}
+                            <span id="botao_nao_favoritado" class="material-symbols-outlined">star</span>
+                        {% endif %}
+                    </a>
                 {% endif %}
 
                 {% if dono %}
@@ -65,6 +69,7 @@
         <p class="autor_info">
             Por <a href="{% url 'usuarios:perfil' username=receita.autor.user.username %}">{{ receita.autor.user.username }}</a>
             | Criado em: {{ receita.criado_em|date:"d/m/Y" }}
+            | Favoritada: {{ receita.usuarios_favorito.count }} vez(es)
         </p>
         
     </div>

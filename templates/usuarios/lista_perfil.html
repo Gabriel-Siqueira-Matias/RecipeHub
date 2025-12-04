@@ -11,23 +11,35 @@
     
     <!-- Bloco receitas todas as receitas -->
     <div class="bloco">
-        <!-- sobre o bloco -->
+
+        <!-- Sobre o bloco -->
         <div class="sobre">
             <a href="{% url 'usuarios:perfil' username=dono_perfil.user.username %}">
                 <div id="botao_voltar">← Voltar para o Perfil</div>
             </a>
-            {% if dono %}
-                <h2>Todas as suas receitas</h2>
+            {% if modo_favoritos %}
+                {% if dono %}
+                    <h2>Todas as suas receitas favoritas</h2>
+                {% else %}
+                    <h2>Todas as receitas favoritas de {{ dono_perfil.user.username }}</h2>
+                {% endif %}
             {% else %}
-                <h2>Todas as receitas públicas de {{ dono_perfil.user.username }}</h2>
+                {% if dono %}
+                    <h2>Todas as suas receitas</h2>
+                {% else %}
+                    <h2>Todas as receitas públicas de {{ dono_perfil.user.username }}</h2>
+                {% endif %}
             {% endif %}
         </div>
+        
         <!-- Espaço q fica os cards das receitas -->
         <div class="itens">
             {% for receita in receitas %}
                 <a href="{% url 'receitas:detalhe_receita' receita.id%}">
+
                     <!-- Card da receita -->
                     <div class="item">
+
                         <!-- Imagem do card -->
                         <div class="imagem_receita">
                             {% with midia=receita.midias.first %}
@@ -38,6 +50,7 @@
                                 {% endif %}
                             {% endwith %}
                         </div>
+
                         <!-- Informações do card -->
                         <div class="informacao_receita">
                             <strong>{{ receita.nome }}</strong>
@@ -52,10 +65,14 @@
                                 <li>Duração: {{ receita.tempo_preparo }} minuto(s)</li>
                             </ul>
                         </div>
+
                     </div>
+
                 </a>
             {% endfor %}
         </div>
+
     </div>
+
 </div>
 {% endblock %}

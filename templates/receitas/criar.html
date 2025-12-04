@@ -23,7 +23,7 @@
     <!-- Bloco do formulario -->
     <div class="bloco">
 
-        <!-- sobre o bloco -->
+        <!-- Sobre o bloco -->
         <div class="sobre">
             <h2>{{ titulo_pagina }}</h2>
             <p>Preencha os detalhes da sua criação culinária. Seu perfil será automaticamente associado como autor.</p>
@@ -35,7 +35,7 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                <!-- bloco formulario receita -->
+                <!-- Bloco formulario receita -->
                 <div class="bloco_formulario">
                     <h2>1. Informações Essenciais</h2>
                     <div class="campo_formulario">
@@ -78,7 +78,7 @@
                     {% endif %}
                 </div>
 
-                <!-- bloco formulario ingredientes -->
+                <!-- Bloco formulario ingredientes -->
                 <div class="bloco_formulario container_formset">
                     <h2>2. Ingredientes</h2>
                     <p class="dica">Adicione os ingredientes. Marque a caixa no final para remover um item.</p>
@@ -101,7 +101,7 @@
                         {% endfor %}
                     </div>
 
-                    <!-- template de ingrediente -->
+                    <!-- Template de ingrediente -->
                     <template id="ingredientes_formulario_template">
                         <div class="ingrediente_formulario formulario_row">
                             {% for hidden in ingredientes_formset.empty_form.hidden_fields %}
@@ -120,7 +120,7 @@
                     {% endif %}
                 </div>
 
-                <!-- bloco formulario etapas -->
+                <!-- Bloco formulario etapas -->
                 <div class="bloco_formulario container_formset">
                     <h2>3. Modo de Preparo (Etapas)</h2>
                     <p class="dica">Descreva o passo a passo da receita.</p>
@@ -140,7 +140,7 @@
                         {% endfor %}
                     </div>
 
-                    <!-- template de etapa -->
+                    <!-- Template de etapa -->
                     <template id="etapas_formulario_template">
                         <div class="etapa_formulario formulario_row">
                             {% for hidden in etapas_formset.empty_form.hidden_fields %}
@@ -159,7 +159,7 @@
                     {% endif %}
                 </div>
 
-                <!-- bloco formulario midias -->
+                <!-- Bloco formulario midias -->
                 <div class="bloco_formulario container_formset">
                     <h2>4. Mídia (Imagens/Vídeos)</h2>
                     <p class="dica">Adicione o arquivo e selecione se é uma Imagem ou Vídeo.</p>
@@ -180,7 +180,7 @@
                         {% endfor %}
                     </div>
 
-                    <!-- template de midia -->
+                    <!-- Template de midia -->
                     <template id="midias_formulario_template">
                         <div class="midia_formulario formulario_row">
                             {% for hidden in midias_formset.empty_form.hidden_fields %}
